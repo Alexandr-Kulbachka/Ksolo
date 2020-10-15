@@ -1,60 +1,63 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:list_manager/app/services/app_color_service.dart';
 import 'package:list_manager/pages/basic/settings.dart';
+import 'package:provider/provider.dart';
 
-import '../style/app_scheme_colors.dart';
+import '../style/app_custom_colors.dart';
 import '../enums/app_elements.dart';
 import '../style/app_color_scheme.dart';
 import 'basic/home.dart';
 
 class MainNavigation extends StatefulWidget {
-  int currentIndex;
-
-  MainNavigation({Key key, this.currentIndex = 0}) : super(key: key);
+  MainNavigation({Key key}) : super(key: key);
 
   @override
   _MainNavigationState createState() => _MainNavigationState();
 }
 
 class _MainNavigationState extends State<MainNavigation> {
-  final List<Widget> mainPages = [
-    Home(),
-    Settings()
-  ];
+  int currentIndex = 0;
+
+  final List<Widget> mainPages = [Home(), Settings()];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: mainPages[widget.currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppElements.bottomNavigationBar.color,
-        showUnselectedLabels: false,
-        unselectedLabelStyle: TextStyle(fontSize: 13),
-        unselectedItemColor: AppSchemeColors.inactiveElement,
-        selectedLabelStyle: TextStyle(fontSize: 16),
-        selectedItemColor: AppElements.bottomNavigationBarItem.color,
-        currentIndex: widget.currentIndex,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
+    return Consumer<AppColorService>(
+        builder: (context, appColorService, child) {
+      return Scaffold(
+        backgroundColor: AppElements.background.color(),
+        body: mainPages[currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: AppElements.bottomNavigationBar.color(),
+          showUnselectedLabels: false,
+          unselectedLabelStyle: TextStyle(fontSize: 13),
+          unselectedItemColor: AppCustomColors.inactiveElement,
+          selectedLabelStyle: TextStyle(fontSize: 16),
+          selectedItemColor: AppElements.bottomNavigationBarItem.color(),
+          currentIndex: currentIndex,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+              ),
+              label: 'Home',
             ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.settings,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.settings,
+              ),
+              label: 'Settings',
             ),
-            label: 'Settings',
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            widget.currentIndex = index;
-          });
-        },
-      ),
-    );
+          ],
+          onTap: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+        ),
+      );
+    });
   }
 }

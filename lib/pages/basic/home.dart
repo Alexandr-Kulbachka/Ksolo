@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:list_manager/app/services/app_color_service.dart';
+import 'package:provider/provider.dart';
 import '../../enums/app_elements.dart';
 import '../../style/app_color_scheme.dart';
 import '../main_navigation.dart';
@@ -23,17 +25,21 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppElements.appBar.color,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[Text('HOME')],
+    return Consumer<AppColorService>(
+        builder: (context, appColorService, child) {
+      return Scaffold(
+        backgroundColor: AppElements.background.color(),
+        appBar: AppBar(
+          backgroundColor: AppElements.appBar.color(),
+          title: Text(widget.title),
         ),
-      ),
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[Text('HOME')],
+          ),
+        ),
+      );
+    });
   }
 }
