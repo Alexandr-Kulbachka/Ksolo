@@ -23,4 +23,10 @@ class ListItemModel {
   set isDone(bool value) {
     _isDone = value;
   }
+
+  void update({String title, String description, bool isDone}) {
+    this._title = title ?? this._title;
+    this._description = description ?? this._description;
+    this._isDone = isDone ?? this._isDone;
+  }
 }
