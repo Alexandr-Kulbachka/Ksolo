@@ -1,10 +1,13 @@
 enum AppElements {
-  appBar,
+  appbar,
   bottomNavigationBar,
   bottomNavigationBarItem,
   basicText,
+  textFieldEnabled,
+  textFieldDisabled,
   simpleCard,
   button,
   background,
-  border
+  border,
+  appbarButton
 }

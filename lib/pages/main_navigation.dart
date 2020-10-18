@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:list_manager/app/services/app_color_service.dart';
-import 'package:list_manager/pages/basic/settings.dart';
+import '../app/services/app_color_service.dart';
+import '../pages/basic/settings.dart';
 import 'package:provider/provider.dart';
 
 import '../style/app_custom_colors.dart';

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:list_manager/app/services/app_color_service.dart';
+import '../app/services/app_color_service.dart';
 import '../enums/app_elements.dart';
 
 enum AppColorSchemes { standard, dark }
@@ -21,9 +21,9 @@ extension MainColorSchemeInfoExtension on AppColorSchemes {
   String get name {
     switch (this) {
       case AppColorSchemes.standard:
-        return 'Standard scheme';
+        return 'Standard mode';
       case AppColorSchemes.dark:
-        return 'Dark scheme';
+        return 'Dark mode';
       default:
         return null;
     }
@@ -41,13 +41,17 @@ extension AppElementsExtension on AppElements {
             case AppElements.basicText:
               return Colors.white;
             case AppElements.bottomNavigationBar:
-            case AppElements.appBar:
+            case AppElements.appbar:
             case AppElements.button:
+            case AppElements.textFieldEnabled:
               return AppColorSchemes.standard.mainColor;
             case AppElements.bottomNavigationBarItem:
               return Colors.white;
+            case AppElements.appbarButton:
             case AppElements.simpleCard:
               return Colors.teal[300];
+            case AppElements.textFieldDisabled:
+              return Colors.grey[400];
             default:
               return AppColorSchemes.standard.mainColor;
           }
@@ -61,12 +65,16 @@ extension AppElementsExtension on AppElements {
             case AppElements.basicText:
               return Colors.white;
             case AppElements.bottomNavigationBar:
-            case AppElements.appBar:
+            case AppElements.appbar:
             case AppElements.button:
+            case AppElements.appbarButton:
             case AppElements.simpleCard:
               return Colors.grey[800];
+            case AppElements.textFieldEnabled:
             case AppElements.bottomNavigationBarItem:
               return Colors.white;
+            case AppElements.textFieldDisabled:
+              return Colors.blue;
             default:
               return AppColorSchemes.dark.mainColor;
           }

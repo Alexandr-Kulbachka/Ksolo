@@ -1,19 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:list_manager/app/services/app_color_service.dart';
-import 'package:list_manager/components/simple_card.dart';
+import '../../app/services/app_color_service.dart';
+import '../../components/app_button.dart';
+import '../../components/app_card.dart';
 import 'package:provider/provider.dart';
 import '../../enums/app_elements.dart';
 import '../../style/app_color_scheme.dart';
 
-class AppStyleSetting extends StatefulWidget {
-  AppStyleSetting({Key key}) : super(key: key);
+class Appearance extends StatefulWidget {
+  Appearance({Key key}) : super(key: key);
 
   @override
-  _AppStyleSettingState createState() => _AppStyleSettingState();
+  _AppearanceState createState() => _AppearanceState();
 }
 
-class _AppStyleSettingState extends State<AppStyleSetting> {
+class _AppearanceState extends State<Appearance> {
   AppColorSchemes selectedScheme;
   AppColorService appColorService;
 
@@ -35,9 +36,9 @@ class _AppStyleSettingState extends State<AppStyleSetting> {
       backgroundColor:
           AppElements.background.color(colorScheme: selectedScheme),
       appBar: AppBar(
-        backgroundColor: AppElements.appBar.color(colorScheme: selectedScheme),
+        backgroundColor: AppElements.appbar.color(colorScheme: selectedScheme),
         title: Text(
-          'App color style',
+          'Appearance',
           style: TextStyle(
               color: AppElements.basicText.color(colorScheme: selectedScheme)),
         ),
@@ -47,7 +48,7 @@ class _AppStyleSettingState extends State<AppStyleSetting> {
           ListView.builder(
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
-                child: SimpleCard(
+                child: AppCard(
                   Row(
                     children: [
                       Container(
@@ -90,33 +91,24 @@ class _AppStyleSettingState extends State<AppStyleSetting> {
           Positioned.fill(
               child: Align(
             alignment: Alignment.bottomCenter,
-            child: _saveButton(),
+            child: AppButton(
+              margin: EdgeInsets.only(bottom: 10),
+              padding: EdgeInsets.all(10),
+              text: 'SAVE',
+              textSize: 20,
+              textColor:
+                  AppElements.basicText.color(colorScheme: selectedScheme),
+              buttonColor:
+                  AppElements.button.color(colorScheme: selectedScheme),
+              maxHeight: 70,
+              maxWidth: 150,
+              onPressed: () => setState(() {
+                appColorService.currentColorScheme = selectedScheme;
+                Navigator.pop(context);
+              }),
+            ),
           ))
         ],
-      ),
-    );
-  }
-
-  Widget _saveButton() {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      child: FlatButton(
-        color: AppElements.button.color(colorScheme: selectedScheme),
-        child: Container(
-          padding: EdgeInsets.all(10),
-          constraints: BoxConstraints(maxHeight: 70, maxWidth: 150),
-          child: Text(
-            'SAVE',
-            style: TextStyle(
-              color: AppElements.basicText.color(colorScheme: selectedScheme),
-              fontSize: 20,
-            ),
-          ),
-        ),
-        onPressed: () => setState(() {
-          appColorService.currentColorScheme = selectedScheme;
-          Navigator.pop(context);
-        }),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:list_manager/pages/app_style_setting/app_style_setting.dart';
+import '../../pages/appearance/appearance.dart';
+import '../../pages/new_list/new_task.dart';
 import '../../pages/main_navigation.dart';
 import '../../pages/basic/home.dart';
 import '../../pages/basic/settings.dart';
@@ -16,15 +17,16 @@ class RouteGenerator {
       case '/home':
         page = Home();
         break;
+      case 'home/new_list':
+        page = NewTask();
+        break;
       case '/settings':
         if (args is String) {
-          page = Settings(
-            title: args,
-          );
+          page = Settings();
         }
         break;
       case '/settings/color_scheme':
-        page = AppStyleSetting();
+        page = Appearance();
         break;
       default:
         return _errorRoute();

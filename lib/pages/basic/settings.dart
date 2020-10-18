@@ -1,16 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:list_manager/app/services/app_color_service.dart';
-import 'package:list_manager/components/simple_card.dart';
-import 'package:list_manager/style/app_custom_colors.dart';
+import '../../app/services/app_color_service.dart';
+import '../../components/app_card.dart';
 import 'package:provider/provider.dart';
 import '../../enums/app_elements.dart';
 import '../../style/app_color_scheme.dart';
 
 class Settings extends StatefulWidget {
-  Settings({Key key, this.title = 'SETTINGS'}) : super(key: key);
-  final String title;
+  Settings({Key key}) : super(key: key);
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -24,8 +22,8 @@ class _SettingsState extends State<Settings> {
       return Scaffold(
         backgroundColor: AppElements.background.color(),
         appBar: AppBar(
-          backgroundColor: AppElements.appBar.color(),
-          title: Text(widget.title),
+          backgroundColor: AppElements.appbar.color(),
+          title: Text('SETTINGS'),
         ),
         body: Container(
           margin: EdgeInsets.all(10),
@@ -39,7 +37,7 @@ class _SettingsState extends State<Settings> {
 
   Widget _settingsButton() {
     return GestureDetector(
-      child: SimpleCard(
+      child: AppCard(
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -51,7 +49,7 @@ class _SettingsState extends State<Settings> {
                   size: 40,
                 )),
             Text(
-              'App color style',
+              'Appearance',
               style:
                   TextStyle(color: AppElements.basicText.color(), fontSize: 20),
             ),

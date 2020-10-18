@@ -1,14 +1,14 @@
-import 'package:list_manager/models/list_item_model.dart';
+import '../models/list_item_model.dart';
 
-class ListModel {
+class TaskModel {
   String _title;
   String _description;
-  List<ListItemModel> _items;
+  List<TaskItemModel> _items;
 
-  ListModel(title, description, {items}) {
+  TaskModel(title, description, {items}) {
     this._title = title;
     this._description = description;
-    this._items = items ?? List<ListItemModel>();
+    this._items = items ?? List<TaskItemModel>();
   }
 
   String get title => _title;
@@ -23,13 +23,13 @@ class ListModel {
 
   get size => _items.length;
 
-  ListItemModel getItem(int index) => _items[index];
+  TaskItemModel getItem(int index) => _items[index];
 
-  void addItem(ListItemModel list) => _items.add(list);
+  void addItem(TaskItemModel task) => _items.add(task);
 
   void deleteItemById(int index) => _items.removeAt(index);
 
-  void deleteItemByValue(ListItemModel item) => _items.remove(item);
+  void deleteItemByValue(TaskItemModel item) => _items.remove(item);
 
   void updateItem(int index, {String title, String description, bool isDone}) {
     _items[index]

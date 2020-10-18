@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:list_manager/enums/app_elements.dart';
-import 'package:list_manager/style/app_color_scheme.dart';
+import '../enums/app_elements.dart';
+import '../style/app_color_scheme.dart';
 
-class SimpleCard extends StatelessWidget {
+class AppCard extends StatelessWidget {
   Widget content;
   EdgeInsets margin;
   EdgeInsets padding;
   Color color;
 
-  SimpleCard(this.content, {this.margin, this.padding, this.color});
+  AppCard(this.content, {this.margin, this.padding, this.color});
 
   @override
   Widget build(BuildContext context) {

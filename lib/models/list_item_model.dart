@@ -1,9 +1,9 @@
-class ListItemModel {
+class TaskItemModel {
   String _title;
   String _description;
   bool _isDone;
 
-  ListItemModel(title, description, {isDone = false}) {
+  TaskItemModel(title, description, {isDone = false}) {
     this._title = title;
     this._description = description;
     this._isDone = isDone;

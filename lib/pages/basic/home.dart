@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:list_manager/app/services/app_color_service.dart';
 import 'package:provider/provider.dart';
+
+import '../../app/services/tasks_service.dart';
+import '../../components/app_card.dart';
+import '../../app/services/app_color_service.dart';
+import '../../components/circled_appbar_button.dart';
 import '../../enums/app_elements.dart';
 import '../../style/app_color_scheme.dart';
-import '../main_navigation.dart';
 
 class Home extends StatefulWidget {
   int currentBottomNavigationIndex;
-  final String title;
 
-  Home({Key key, this.title = 'HOME'}) : super(key: key);
+  Home({Key key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -25,19 +27,85 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppColorService>(
-        builder: (context, appColorService, child) {
+    return Consumer2<AppColorService, TasksService>(
+        builder: (context, appColorService, tasksService, child) {
       return Scaffold(
         backgroundColor: AppElements.background.color(),
         appBar: AppBar(
-          backgroundColor: AppElements.appBar.color(),
-          title: Text(widget.title),
+          backgroundColor: AppElements.appbar.color(),
+          title: Text('HOME'),
+          actions: [
+            CircledAppbarIcon(
+              size: 45,
+              margin: EdgeInsets.symmetric(horizontal: 4),
+              iconColor: AppElements.basicText.color(),
+              icon: Icons.search,
+              onPressed: () {},
+            ),
+            CircledAppbarIcon(
+              size: 45,
+              margin: EdgeInsets.only(left: 4, right: 15),
+              iconColor: AppElements.basicText.color(),
+              icon: Icons.add,
+              onPressed: () {
+                Navigator.of(context).pushNamed('home/new_list');
+              },
+            )
+          ],
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[Text('HOME')],
-          ),
+          child: tasksService.size == 0
+              ? Text(
+                  'No lists',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: AppColorService.currentAppColorScheme.mainColor,
+                  ),
+                )
+              : ListView.builder(
+                  itemBuilder: (context, i) {
+                    var task = tasksService.getTask(i);
+                    return AppCard(
+                      Container(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text('name: ',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: AppElements.basicText.color())),
+                                Text(task.title,
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        color: AppElements.basicText.color())),
+                              ],
+                            ),
+                            Row(children: [
+                              Text('description: ',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: AppElements.basicText.color())),
+                              Flexible(
+                                  child: Text(
+                                task.description,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: AppElements.basicText.color()),
+                              ))
+                            ])
+                          ],
+                        ),
+                      ),
+                      padding: EdgeInsets.all(5),
+                      margin: EdgeInsets.all(5),
+                    );
+                  },
+                  itemCount: tasksService.size,
+                ),
         ),
       );
     });
