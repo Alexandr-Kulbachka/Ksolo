@@ -1,8 +1,8 @@
-import 'package:ListManager/models/list_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/task_model.dart';
 import '../../app/services/tasks_service.dart';
 import '../../components/app_text_field.dart';
 import '../../app/services/app_color_service.dart';
@@ -74,7 +74,8 @@ class _NewTaskState extends State<NewTask> {
             children: [
               SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.all(5),
+                  margin:
+                      EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 60),
                   decoration: BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
@@ -141,8 +142,8 @@ class _NewTaskState extends State<NewTask> {
                     textSize: 20,
                     textColor: AppElements.basicText.color(),
                     buttonColor: canSave
-                        ? AppElements.button.color()
-                        : AppElements.textFieldDisabled.color(),
+                        ? AppElements.enabledButton.color()
+                        : AppElements.disabledButton.color(),
                     maxHeight: 70,
                     maxWidth: 150,
                     onPressed: () {

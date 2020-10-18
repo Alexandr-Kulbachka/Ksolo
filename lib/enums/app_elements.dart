@@ -6,7 +6,8 @@ enum AppElements {
   textFieldEnabled,
   textFieldDisabled,
   simpleCard,
-  button,
+  enabledButton,
+  disabledButton,
   background,
   border,
   appbarButton

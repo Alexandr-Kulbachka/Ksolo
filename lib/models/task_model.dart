@@ -1,4 +1,4 @@
-import '../models/list_item_model.dart';
+import '../models/task_item_model.dart';
 
 class TaskModel {
   String _title;

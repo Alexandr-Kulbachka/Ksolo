@@ -99,7 +99,7 @@ class _AppearanceState extends State<Appearance> {
               textColor:
                   AppElements.basicText.color(colorScheme: selectedScheme),
               buttonColor:
-                  AppElements.button.color(colorScheme: selectedScheme),
+                  AppElements.enabledButton.color(colorScheme: selectedScheme),
               maxHeight: 70,
               maxWidth: 150,
               onPressed: () => setState(() {

@@ -42,7 +42,7 @@ extension AppElementsExtension on AppElements {
               return Colors.white;
             case AppElements.bottomNavigationBar:
             case AppElements.appbar:
-            case AppElements.button:
+            case AppElements.enabledButton:
             case AppElements.textFieldEnabled:
               return AppColorSchemes.standard.mainColor;
             case AppElements.bottomNavigationBarItem:
@@ -50,6 +50,7 @@ extension AppElementsExtension on AppElements {
             case AppElements.appbarButton:
             case AppElements.simpleCard:
               return Colors.teal[300];
+            case AppElements.disabledButton:
             case AppElements.textFieldDisabled:
               return Colors.grey[400];
             default:
@@ -66,15 +67,16 @@ extension AppElementsExtension on AppElements {
               return Colors.white;
             case AppElements.bottomNavigationBar:
             case AppElements.appbar:
-            case AppElements.button:
+            case AppElements.enabledButton:
             case AppElements.appbarButton:
             case AppElements.simpleCard:
+            case AppElements.textFieldDisabled:
               return Colors.grey[800];
+            case AppElements.enabledButton:
+              return Colors.grey[400];
             case AppElements.textFieldEnabled:
             case AppElements.bottomNavigationBarItem:
               return Colors.white;
-            case AppElements.textFieldDisabled:
-              return Colors.blue;
             default:
               return AppColorSchemes.dark.mainColor;
           }

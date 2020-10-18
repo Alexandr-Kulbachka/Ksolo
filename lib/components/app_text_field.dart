@@ -1,9 +1,13 @@
+import 'package:TaskManager/enums/app_elements.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../style/app_color_scheme.dart';
 
 class AppTextField extends StatelessWidget {
+  final bool readOnly;
   final EdgeInsets padding;
   final int maxLines;
+  final Color textColor;
   final Color cursorColor;
   final String labelText;
   final double labelSize;
@@ -21,6 +25,7 @@ class AppTextField extends StatelessWidget {
 
   const AppTextField({
     Key key,
+    this.readOnly = false,
     this.padding,
     this.maxLines = 1,
     this.cursorColor,
@@ -37,6 +42,7 @@ class AppTextField extends StatelessWidget {
     this.errorText,
     this.onChanged,
     this.onTap,
+    this.textColor,
   }) : super(key: key);
 
   @override
@@ -44,9 +50,11 @@ class AppTextField extends StatelessWidget {
     return Container(
         padding: padding ?? EdgeInsets.all(0),
         child: TextField(
+          readOnly: readOnly,
           controller: fieldController ?? TextEditingController(),
           focusNode: fieldFocusNode ?? FocusNode(),
           maxLines: maxLines,
+          style: TextStyle(color: textColor ?? AppElements.textFieldEnabled.color()),
           cursorColor: cursorColor,
           cursorWidth: cursorWidth,
           decoration: InputDecoration(

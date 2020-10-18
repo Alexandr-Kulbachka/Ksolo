@@ -48,64 +48,69 @@ class _HomeState extends State<Home> {
               iconColor: AppElements.basicText.color(),
               icon: Icons.add,
               onPressed: () {
-                Navigator.of(context).pushNamed('home/new_list');
+                Navigator.of(context).pushNamed('home/new_task');
               },
             )
           ],
         ),
-        body: Center(
-          child: tasksService.size == 0
-              ? Text(
-                  'No lists',
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: AppColorService.currentAppColorScheme.mainColor,
-                  ),
-                )
-              : ListView.builder(
-                  itemBuilder: (context, i) {
-                    var task = tasksService.getTask(i);
-                    return AppCard(
-                      Container(
-                        child: Column(
-                          children: [
-                            Row(
+        body: GestureDetector(
+          child: Center(
+            child: tasksService.size == 0
+                ? Text(
+                    'No lists',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: AppColorService.currentAppColorScheme.mainColor,
+                    ),
+                  )
+                : ListView.builder(
+                    itemBuilder: (context, i) {
+                      var task = tasksService.getTask(i);
+                      return GestureDetector(
+                          child: AppCard(
+                            Column(
                               children: [
-                                Text('name: ',
+                                Row(
+                                  children: [
+                                    Text(task.title,
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            color:
+                                                AppElements.basicText.color())),
+                                  ],
+                                ),
+                                Row(children: [
+                                  Flexible(
+                                      child: Text(
+                                    task.description,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
                                     style: TextStyle(
-                                        fontSize: 15,
-                                        color: AppElements.basicText.color())),
-                                Text(task.title,
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        color: AppElements.basicText.color())),
+                                        fontSize: 16,
+                                        color: AppElements.basicText.color()),
+                                  ))
+                                ])
                               ],
                             ),
-                            Row(children: [
-                              Text('description: ',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: AppElements.basicText.color())),
-                              Flexible(
-                                  child: Text(
-                                task.description,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: false,
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: AppElements.basicText.color()),
-                              ))
-                            ])
-                          ],
-                        ),
-                      ),
-                      padding: EdgeInsets.all(5),
-                      margin: EdgeInsets.all(5),
-                    );
-                  },
-                  itemCount: tasksService.size,
-                ),
+                            padding: EdgeInsets.all(5),
+                            margin: EdgeInsets.all(5),
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(context, 'home/task',
+                                arguments: {'index': i});
+                          });
+                    },
+                    itemCount: tasksService.size,
+                  ),
+          ),
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
         ),
       );
     });
