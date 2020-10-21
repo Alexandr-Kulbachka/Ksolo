@@ -1,4 +1,4 @@
-name: TaskManager
+name: Ksolo
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -26,7 +26,8 @@ dependencies:
   provider: ^4.3.2+2
   sqflite: ^1.2.0
   path_provider: ^1.6.0
-
+  firebase_core: ^0.5.0+1
+  firebase_database: ^4.1.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -1,6 +1,6 @@
-import 'package:TaskManager/enums/app_elements.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../enums/app_elements.dart';
 import '../style/app_color_scheme.dart';
 
 class AppTextField extends StatelessWidget {
@@ -54,7 +54,8 @@ class AppTextField extends StatelessWidget {
           controller: fieldController ?? TextEditingController(),
           focusNode: fieldFocusNode ?? FocusNode(),
           maxLines: maxLines,
-          style: TextStyle(color: textColor ?? AppElements.textFieldEnabled.color()),
+          style: TextStyle(
+              color: textColor ?? AppElements.textFieldEnabled.color()),
           cursorColor: cursorColor,
           cursorWidth: cursorWidth,
           decoration: InputDecoration(

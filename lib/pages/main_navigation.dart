@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../app/services/app_color_service.dart';
-import '../pages/basic/settings.dart';
+import '../pages/basic/settings_page.dart';
 import 'package:provider/provider.dart';
 
 import '../style/app_custom_colors.dart';
 import '../enums/app_elements.dart';
 import '../style/app_color_scheme.dart';
-import 'basic/home.dart';
+import 'basic/home_page.dart';
 
 class MainNavigation extends StatefulWidget {
   MainNavigation({Key key}) : super(key: key);

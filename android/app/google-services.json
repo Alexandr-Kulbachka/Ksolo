@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "455855671919",
+    "firebase_url": "https://ksolo-e39d1.firebaseio.com",
+    "project_id": "ksolo-e39d1",
+    "storage_bucket": "ksolo-e39d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:455855671919:android:8a591d89f4893fdcf35b9a",
+        "android_client_info": {
+          "package_name": "com.example.ksolo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "455855671919-k8uvp3v7fl9t3kq8ekpbfefd9sfl3i87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN_NHMApOiKUSEMfYL_yjnhUKO99t37Io"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "455855671919-k8uvp3v7fl9t3kq8ekpbfefd9sfl3i87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
