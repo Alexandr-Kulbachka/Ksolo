@@ -104,6 +104,7 @@ class _NewTaskState extends State<NewTask> {
                             isNameValid = true;
                             canSave = true;
                           } else {
+                            isNameValid = false;
                             canSave = false;
                           }
                           setState(() {});
