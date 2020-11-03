@@ -5,6 +5,10 @@ import '../style/app_color_scheme.dart';
 
 class AppTextField extends StatelessWidget {
   final bool readOnly;
+  final bool enableSuggestions;
+  final bool autocorrect;
+  final bool obscureText;
+  final EdgeInsets margin;
   final EdgeInsets padding;
   final int maxLines;
   final Color textColor;
@@ -43,13 +47,21 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.textColor,
+    this.enableSuggestions = true,
+    this.autocorrect = true,
+    this.obscureText = false,
+    this.margin,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+        margin: margin ?? EdgeInsets.all(0),
         padding: padding ?? EdgeInsets.all(0),
         child: TextField(
+          obscureText: obscureText,
+          enableSuggestions: enableSuggestions,
+          autocorrect: autocorrect,
           readOnly: readOnly,
           controller: fieldController ?? TextEditingController(),
           focusNode: fieldFocusNode ?? FocusNode(),

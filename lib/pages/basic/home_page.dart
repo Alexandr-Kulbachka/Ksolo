@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../app/services/tasks_service.dart';
 import '../../components/app_card.dart';
 import '../../app/services/app_color_service.dart';
-import '../../components/circled_appbar_button.dart';
+import '../../components/circled_button.dart';
 import '../../enums/app_elements.dart';
 import '../../style/app_color_scheme.dart';
 
@@ -32,17 +32,18 @@ class _HomeState extends State<Home> {
       return Scaffold(
         backgroundColor: AppElements.background.color(),
         appBar: AppBar(
+          leading: Container(),
           backgroundColor: AppElements.appbar.color(),
           title: Text('HOME'),
           actions: [
-            CircledAppbarIcon(
+            CircledButton(
               size: 45,
               margin: EdgeInsets.symmetric(horizontal: 4),
               iconColor: AppElements.basicText.color(),
               icon: Icons.search,
               onPressed: () {},
             ),
-            CircledAppbarIcon(
+            CircledButton(
               size: 45,
               margin: EdgeInsets.only(left: 4, right: 15),
               iconColor: AppElements.basicText.color(),
@@ -57,7 +58,7 @@ class _HomeState extends State<Home> {
           child: Center(
             child: tasksService.size == 0
                 ? Text(
-                    'No lists',
+                    'No tasks',
                     style: TextStyle(
                       fontSize: 25,
                       color: AppColorService.currentAppColorScheme.mainColor,

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CircledAppbarIcon extends StatelessWidget {
+class CircledButton extends StatelessWidget {
   final double size;
   final EdgeInsets margin;
   final IconData icon;
@@ -9,7 +9,7 @@ class CircledAppbarIcon extends StatelessWidget {
   final Color iconColor;
   final void Function() onPressed;
 
-  CircledAppbarIcon({
+  CircledButton({
     this.size = 10,
     this.margin,
     this.buttonColor,

@@ -1,3 +1,4 @@
+import 'package:Ksolo/components/circled_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,15 @@ class _RegistrationState extends State<Registration> {
   bool _isEmailValid = false;
   bool _isPasswordValid = false;
   bool _isConfirmPasswordValid = false;
+
+  bool _hasUppercase;
+  bool _hasDigits;
+  bool _hasLowercase;
+  bool _hasSpecialCharacters;
+  bool _hasMinLength;
+
+  bool _isPasswordObscured = true;
+  bool _isConfirmPasswordObscured = true;
 
   RegExp _emailRegExp = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -82,95 +92,7 @@ class _RegistrationState extends State<Registration> {
               fit: StackFit.expand,
               children: [
                 ListView(
-                  children: [
-                    AppTextField(
-                      padding: EdgeInsets.all(10),
-                      fieldController: _emailController,
-                      fieldFocusNode: _emailFocusNode,
-                      maxLines: 1,
-                      cursorColor:
-                          AppColorService.currentAppColorScheme.mainColor,
-                      labelText: "Input email",
-                      labelColor: _emailFocusNode.hasFocus ||
-                              _emailController.text.length > 0
-                          ? AppElements.textFieldEnabled.color()
-                          : AppElements.textFieldDisabled.color(),
-                      enabledBorderColor: AppElements.textFieldEnabled.color(),
-                      disabledBorderColor: _emailController.text.length > 0
-                          ? AppElements.textFieldEnabled.color()
-                          : AppElements.textFieldDisabled.color(),
-                      errorText: _isEmailValid || _emailController.text.isEmpty
-                          ? null
-                          : "Invalid email",
-                      onChanged: (value) {
-                        if (_emailRegExp.hasMatch(value)) {
-                          _isEmailValid = true;
-                        } else {
-                          _isEmailValid = false;
-                        }
-                        setState(() {
-                          checkFields();
-                        });
-                      },
-                    ),
-                    AppTextField(
-                      padding: EdgeInsets.all(10),
-                      fieldController: _passwordController,
-                      fieldFocusNode: _passwordFocusNode,
-                      maxLines: 1,
-                      cursorColor:
-                          AppColorService.currentAppColorScheme.mainColor,
-                      labelText: "Input password",
-                      labelColor: _passwordFocusNode.hasFocus ||
-                              _passwordController.text.length > 0
-                          ? AppElements.textFieldEnabled.color()
-                          : AppElements.textFieldDisabled.color(),
-                      enabledBorderColor: AppElements.textFieldEnabled.color(),
-                      disabledBorderColor: _passwordController.text.length > 0
-                          ? AppElements.textFieldEnabled.color()
-                          : AppElements.textFieldDisabled.color(),
-                      errorText:
-                          _isPasswordValid || _passwordController.text.isEmpty
-                              ? null
-                              : "Invalid password",
-                      onChanged: (value) {
-                        _isPasswordValid = _isPasswordCompliant(value);
-                        _isPasswordsMatched();
-                        setState(() {
-                          checkFields();
-                        });
-                      },
-                    ),
-                    AppTextField(
-                      padding: EdgeInsets.all(10),
-                      fieldController: _confirmPasswordController,
-                      fieldFocusNode: _confirmPasswordFocusNode,
-                      maxLines: 1,
-                      cursorColor:
-                          AppColorService.currentAppColorScheme.mainColor,
-                      labelText: "Confirm password",
-                      labelColor: _confirmPasswordFocusNode.hasFocus ||
-                              _confirmPasswordController.text.length > 0
-                          ? AppElements.textFieldEnabled.color()
-                          : AppElements.textFieldDisabled.color(),
-                      enabledBorderColor: AppElements.textFieldEnabled.color(),
-                      disabledBorderColor:
-                          _confirmPasswordController.text.length > 0
-                              ? AppElements.textFieldEnabled.color()
-                              : AppElements.textFieldDisabled.color(),
-                      errorText: _isConfirmPasswordValid ||
-                              _confirmPasswordController.text.isEmpty
-                          ? null
-                          : "Invalid password",
-                      onChanged: (value) {
-                        _isConfirmPasswordValid = _isPasswordCompliant(value);
-                        _isPasswordsMatched();
-                        setState(() {
-                          checkFields();
-                        });
-                      },
-                    ),
-                  ],
+                  children: [_fields(), _passwordRequirements()],
                 ),
                 Positioned(
                     child: Align(
@@ -189,7 +111,7 @@ class _RegistrationState extends State<Registration> {
                       onPressed: () {
                         if (_canSave) {
                           setState(() {
-                            Navigator.of(context).pushNamed('/home');
+                            Navigator.of(context).pushReplacementNamed('/home');
                           });
                         }
                       }),
@@ -206,23 +128,212 @@ class _RegistrationState extends State<Registration> {
     });
   }
 
-  bool _isPasswordCompliant(String password, [int minLength = 6]) {
+  Widget _fields() {
+    return Column(children: [
+      AppTextField(
+        padding: EdgeInsets.all(10),
+        fieldController: _emailController,
+        fieldFocusNode: _emailFocusNode,
+        maxLines: 1,
+        cursorColor: AppColorService.currentAppColorScheme.mainColor,
+        labelText: "Input email",
+        labelColor: _emailFocusNode.hasFocus || _emailController.text.length > 0
+            ? AppElements.textFieldEnabled.color()
+            : AppElements.textFieldDisabled.color(),
+        enabledBorderColor: AppElements.textFieldEnabled.color(),
+        disabledBorderColor: _emailController.text.length > 0
+            ? AppElements.textFieldEnabled.color()
+            : AppElements.textFieldDisabled.color(),
+        errorText: _isEmailValid || _emailController.text.isEmpty
+            ? null
+            : "Invalid email",
+        onChanged: (value) {
+          setState(() {
+            if (_emailRegExp.hasMatch(value)) {
+              _isEmailValid = true;
+            } else {
+              _isEmailValid = false;
+            }
+            checkFields();
+          });
+        },
+      ),
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+              child: AppTextField(
+            obscureText: _isPasswordObscured,
+            autocorrect: false,
+            enableSuggestions: false,
+            padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+            fieldController: _passwordController,
+            fieldFocusNode: _passwordFocusNode,
+            maxLines: 1,
+            cursorColor: AppColorService.currentAppColorScheme.mainColor,
+            labelText: "Input password",
+            labelColor: _passwordFocusNode.hasFocus ||
+                    _passwordController.text.length > 0
+                ? AppElements.textFieldEnabled.color()
+                : AppElements.textFieldDisabled.color(),
+            enabledBorderColor: AppElements.textFieldEnabled.color(),
+            disabledBorderColor: _passwordController.text.length > 0
+                ? AppElements.textFieldEnabled.color()
+                : AppElements.textFieldDisabled.color(),
+            errorText: _isPasswordValid || _passwordController.text.isEmpty
+                ? null
+                : "Invalid password",
+            onChanged: (value) {
+              setState(() {
+                _isPasswordValid = _isPasswordCompliant(value);
+                _isPasswordsMatched();
+                checkFields();
+              });
+            },
+          )),
+          CircledButton(
+              size: 40,
+              icon: _isPasswordObscured
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              iconColor: _passwordFocusNode.hasFocus ||
+                      _passwordController.text.length > 0
+                  ? AppElements.textFieldEnabled.color()
+                  : AppElements.textFieldDisabled.color(),
+              onPressed: () {
+                setState(() {
+                  _isPasswordObscured = !_isPasswordObscured;
+                });
+              })
+        ],
+      ),
+      Row(
+        children: [
+          Flexible(
+              child: AppTextField(
+            obscureText: _isConfirmPasswordObscured,
+            autocorrect: false,
+            enableSuggestions: false,
+            padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+            fieldController: _confirmPasswordController,
+            fieldFocusNode: _confirmPasswordFocusNode,
+            maxLines: 1,
+            cursorColor: AppColorService.currentAppColorScheme.mainColor,
+            labelText: "Confirm password",
+            labelColor: _confirmPasswordFocusNode.hasFocus ||
+                    _confirmPasswordController.text.length > 0
+                ? AppElements.textFieldEnabled.color()
+                : AppElements.textFieldDisabled.color(),
+            enabledBorderColor: AppElements.textFieldEnabled.color(),
+            disabledBorderColor: _confirmPasswordController.text.length > 0
+                ? AppElements.textFieldEnabled.color()
+                : AppElements.textFieldDisabled.color(),
+            errorText: _isConfirmPasswordValid ||
+                    _confirmPasswordController.text.isEmpty
+                ? null
+                : "Invalid password",
+            onChanged: (value) {
+              setState(() {
+                _isPasswordsMatched();
+                checkFields();
+              });
+            },
+          )),
+          CircledButton(
+              size: 40,
+              icon: _isConfirmPasswordObscured
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              iconColor: _confirmPasswordFocusNode.hasFocus ||
+                      _confirmPasswordController.text.length > 0
+                  ? AppElements.textFieldEnabled.color()
+                  : AppElements.textFieldDisabled.color(),
+              onPressed: () {
+                setState(() {
+                  _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
+                });
+              }),
+        ],
+      )
+    ]);
+  }
+
+  Widget _passwordRequirements() {
+    return Column(children: [
+      _passwordRequirement(
+          text: 'Password Requirements:',
+          color: _passwordController.text.isEmpty
+              ? Colors.grey
+              : AppElements.appbar.color(),
+          size: 20),
+      _passwordRequirement(
+          text: 'Uppercase letter(s)',
+          color: _passwordController.text.isEmpty
+              ? Colors.grey
+              : _hasUppercase
+                  ? AppElements.appbar.color()
+                  : Colors.red),
+      _passwordRequirement(
+          text: 'Lowercase letter(s)',
+          color: _passwordController.text.isEmpty
+              ? Colors.grey
+              : _hasLowercase
+                  ? AppElements.appbar.color()
+                  : Colors.red),
+      _passwordRequirement(
+          text: 'Numeric character(s)',
+          color: _passwordController.text.isEmpty
+              ? Colors.grey
+              : _hasDigits
+                  ? AppElements.appbar.color()
+                  : Colors.red),
+      _passwordRequirement(
+          text: 'Special character(s)',
+          color: _passwordController.text.isEmpty
+              ? Colors.grey
+              : _hasSpecialCharacters
+                  ? AppElements.appbar.color()
+                  : Colors.red),
+      _passwordRequirement(
+          text: 'Longer than 8 characters',
+          color: _passwordController.text.isEmpty
+              ? Colors.grey
+              : _hasMinLength
+                  ? AppElements.appbar.color()
+                  : Colors.red),
+    ]);
+  }
+
+  Widget _passwordRequirement({String text, Color color, double size}) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: color,
+          fontSize: size ?? 18,
+        ),
+      ),
+    );
+  }
+
+  bool _isPasswordCompliant(String password, [int minLength = 8]) {
     if (password == null || password.isEmpty) {
       return false;
     }
 
-    bool hasUppercase = password.contains(new RegExp(r'[A-Z]'));
-    bool hasDigits = password.contains(new RegExp(r'[0-9]'));
-    bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
-    bool hasSpecialCharacters =
+    _hasUppercase = password.contains(new RegExp(r'[A-Z]'));
+    _hasDigits = password.contains(new RegExp(r'[0-9]'));
+    _hasLowercase = password.contains(new RegExp(r'[a-z]'));
+    _hasSpecialCharacters =
         password.contains(new RegExp(r'[!@#$%^&*(),.?"_:{}|<>+-]'));
-    bool hasMinLength = password.length > minLength;
+    _hasMinLength = password.length > minLength;
 
-    return hasDigits &
-        hasUppercase &
-        hasLowercase &
-        hasSpecialCharacters &
-        hasMinLength;
+    return _hasDigits &
+        _hasUppercase &
+        _hasLowercase &
+        _hasSpecialCharacters &
+        _hasMinLength;
   }
 
   void _isPasswordsMatched() {
