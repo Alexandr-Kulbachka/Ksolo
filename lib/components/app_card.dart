@@ -4,10 +4,10 @@ import '../enums/app_elements.dart';
 import '../style/app_color_scheme.dart';
 
 class AppCard extends StatelessWidget {
-  Widget content;
-  EdgeInsets margin;
-  EdgeInsets padding;
-  Color color;
+  final Widget content;
+  final EdgeInsets margin;
+  final EdgeInsets padding;
+  final Color color;
 
   AppCard(this.content, {this.margin, this.padding, this.color});
 
