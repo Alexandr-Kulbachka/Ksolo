@@ -1,8 +1,10 @@
-import 'package:Ksolo/components/circled_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../app/firebase/firebase_auth.dart';
+import '../../../components/circled_button.dart';
 import '../../../app/services/app_color_service.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_field.dart';
@@ -17,6 +19,8 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> {
+  FBAuth _fbAuth;
+
   TextEditingController _emailController;
   TextEditingController _passwordController;
   TextEditingController _confirmPasswordController;
@@ -45,6 +49,7 @@ class _RegistrationState extends State<Registration> {
 
   @override
   void initState() {
+    _fbAuth = FBAuth.getInstance();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
@@ -108,11 +113,57 @@ class _RegistrationState extends State<Registration> {
                           : AppElements.disabledButton.color(),
                       maxHeight: 70,
                       maxWidth: 150,
-                      onPressed: () {
+                      onPressed: () async {
                         if (_canSave) {
-                          setState(() {
-                            Navigator.of(context).pushReplacementNamed('/home');
-                          });
+                          var result = await _fbAuth.register(
+                              _emailController.text, _passwordController.text);
+                          if (result is User) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  Future.delayed(Duration(seconds: 1), () {
+                                    Navigator.of(context)
+                                        .pushReplacementNamed('/home');
+                                  });
+                                  return AlertDialog(
+                                    backgroundColor: AppElements.appbar.color(),
+                                    title: Text(
+                                      'Account successfully created!',
+                                      style: TextStyle(
+                                        color: AppElements.basicText.color(),
+                                      ),
+                                    ),
+                                  );
+                                });
+                          } else if (result is FirebaseAuthException) {
+                            if (result.code == 'email-already-in-use') {
+                              setState(() {
+                                _isEmailValid = false;
+                              });
+                            }
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    backgroundColor: AppElements.appbar.color(),
+                                    title: Text(
+                                      result.message,
+                                      style: TextStyle(
+                                        color: AppElements.basicText.color(),
+                                      ),
+                                    ),
+                                    actions: [
+                                      AppButton(
+                                          size: 50,
+                                          text: 'OK',
+                                          textColor:
+                                              AppElements.basicText.color(),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop())
+                                    ],
+                                  );
+                                });
+                          }
                         }
                       }),
                 ))

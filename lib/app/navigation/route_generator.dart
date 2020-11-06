@@ -1,14 +1,15 @@
-import 'package:Ksolo/pages/start/authorization/authorization_page.dart';
-import 'package:Ksolo/pages/start/registration/registration_page.dart';
-import 'package:Ksolo/pages/start/start_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../pages/task/task_details_page.dart';
+
 import '../../pages/appearance/appearance_page.dart';
-import '../../pages/task/new_task_page.dart';
-import '../../pages/main_navigation.dart';
 import '../../pages/basic/home_page.dart';
 import '../../pages/basic/settings_page.dart';
+import '../../pages/main_navigation.dart';
+import '../../pages/start/authorization/authorization_page.dart';
+import '../../pages/start/registration/registration_page.dart';
+import '../../pages/start/start_page.dart';
+import '../../pages/task/new_task_page.dart';
+import '../../pages/task/task_details_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

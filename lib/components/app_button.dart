@@ -21,8 +21,8 @@ class AppButton extends StatelessWidget {
     this.textColor,
     this.text,
     this.textSize,
-    this.maxHeight,
-    this.maxWidth,
+    this.maxHeight = 0,
+    this.maxWidth = 0,
     @required this.onPressed,
   });
 
