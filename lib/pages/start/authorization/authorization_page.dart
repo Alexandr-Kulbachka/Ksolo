@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../app/firebase/firebase_auth.dart';
 import '../../../app/services/app_color_service.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_field.dart';
@@ -17,6 +19,8 @@ class Authorization extends StatefulWidget {
 }
 
 class _AuthorizationState extends State<Authorization> {
+  FBAuth _fbAuth;
+
   TextEditingController _emailController;
   TextEditingController _passwordController;
 
@@ -24,6 +28,7 @@ class _AuthorizationState extends State<Authorization> {
   FocusNode _passwordFocusNode;
 
   bool _isEmailValid = false;
+  bool _isPasswordValid = true;
 
   bool _isPasswordObscured = true;
 
@@ -34,6 +39,8 @@ class _AuthorizationState extends State<Authorization> {
 
   @override
   void initState() {
+    _fbAuth = FBAuth.getInstance();
+
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
 
@@ -76,11 +83,37 @@ class _AuthorizationState extends State<Authorization> {
                           : AppElements.disabledButton.color(),
                       maxHeight: 70,
                       maxWidth: 150,
-                      onPressed: () {
+                      onPressed: () async {
                         if (_allFieldsFilled) {
-                          setState(() {
-                            Navigator.of(context).pushReplacementNamed('/home');
-                          });
+                          var result = await _fbAuth.signInWithEmailAndPassword(
+                              _emailController.text, _passwordController.text);
+                          if (result is User) {
+                            Navigator.of(context).pushReplacementNamed('/main');
+                          } else if (result is FirebaseAuthException) {
+                            _handleErrors(result.code);
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    backgroundColor: AppElements.appbar.color(),
+                                    title: Text(
+                                      result.message,
+                                      style: TextStyle(
+                                        color: AppElements.basicText.color(),
+                                      ),
+                                    ),
+                                    actions: [
+                                      AppButton(
+                                          size: 50,
+                                          text: 'OK',
+                                          textColor:
+                                              AppElements.basicText.color(),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop())
+                                    ],
+                                  );
+                                });
+                          }
                         }
                       }),
                 ))
@@ -94,6 +127,21 @@ class _AuthorizationState extends State<Authorization> {
             },
           ));
     });
+  }
+
+  void _handleErrors(String errorCode) {
+    switch (errorCode) {
+      case 'user-not-found':
+        setState(() {
+          _isEmailValid = false;
+        });
+        break;
+      case 'wrong-password':
+        setState(() {
+          _isPasswordValid = false;
+        });
+        break;
+    }
   }
 
   Widget _fields() {
@@ -148,9 +196,7 @@ class _AuthorizationState extends State<Authorization> {
             disabledBorderColor: _passwordController.text.length > 0
                 ? AppElements.textFieldEnabled.color()
                 : AppElements.textFieldDisabled.color(),
-            // errorText: false || _passwordController.text.isEmpty
-            //     ? null
-            //     : "Invalid password",
+            errorText: _isPasswordValid ? null : "Invalid password",
             onChanged: (value) {
               setState(() {
                 checkFields();
@@ -177,6 +223,7 @@ class _AuthorizationState extends State<Authorization> {
   }
 
   void checkFields() {
+    _isPasswordValid = true;
     if (_isEmailValid &&
         _emailController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {

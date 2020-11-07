@@ -123,7 +123,7 @@ class _RegistrationState extends State<Registration> {
                                 builder: (context) {
                                   Future.delayed(Duration(seconds: 1), () {
                                     Navigator.of(context)
-                                        .pushReplacementNamed('/home');
+                                        .pushReplacementNamed('/main');
                                   });
                                   return AlertDialog(
                                     backgroundColor: AppElements.appbar.color(),

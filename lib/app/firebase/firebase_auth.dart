@@ -29,4 +29,18 @@ class FBAuth {
     }
     return _currentUser;
   }
+
+  Future<dynamic> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      _currentUser = (await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      ))
+          .user;
+    } catch (exception) {
+      return exception;
+    }
+    return _currentUser;
+  }
 }

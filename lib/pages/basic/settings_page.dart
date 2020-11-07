@@ -44,7 +44,7 @@ class _SettingsState extends State<Settings> {
             Container(
                 margin: EdgeInsets.all(15),
                 child: Icon(
-                  Icons.settings,
+                  Icons.visibility,
                   color: AppElements.basicText.color(),
                   size: 40,
                 )),
