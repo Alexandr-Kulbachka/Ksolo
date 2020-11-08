@@ -5,7 +5,6 @@ import '../pages/basic/settings_page.dart';
 import 'package:provider/provider.dart';
 
 import '../style/app_custom_colors.dart';
-import '../enums/app_elements.dart';
 import '../style/app_color_scheme.dart';
 import 'basic/home_page.dart';
 

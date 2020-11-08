@@ -27,7 +27,7 @@ class FBAuth {
     } catch (exception) {
       return exception;
     }
-    return _auth.currentUser;
+    return true;
   }
 
   Future<dynamic> signInWithEmailAndPassword(
@@ -40,7 +40,7 @@ class FBAuth {
     } catch (exception) {
       return exception;
     }
-    return _auth.currentUser;
+    return true;
   }
 
   Future<void> signOut() async {
@@ -56,13 +56,24 @@ class FBAuth {
           .then((value) async {
         await _auth.currentUser.updateEmail(newEmail);
       });
-      return true;
     } catch (exception) {
       return exception;
     }
+    return true;
   }
 
-  Future<void> changePassword() async {
-    // await _auth.signOut();
+  Future<dynamic> changePassword(
+      String oldEmail, String password, String newPassword) async {
+    try {
+      await _auth.currentUser
+          .reauthenticateWithCredential(
+              EmailAuthProvider.credential(email: oldEmail, password: password))
+          .then((value) async {
+        await _auth.currentUser.updatePassword(newPassword);
+      });
+    } catch (exception) {
+      return exception;
+    }
+    return true;
   }
 }

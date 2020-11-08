@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +6,7 @@ import '../../../app/services/app_color_service.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_field.dart';
 import '../../../components/circled_button.dart';
-import '../../../enums/app_elements.dart';
+import '../../../components/fb_auth_success_error_message.dart';
 import '../../../style/app_color_scheme.dart';
 
 class AccountInfo extends StatefulWidget {
@@ -185,6 +184,13 @@ class _AccountInfoState extends State<AccountInfo> {
           });
         },
       ),
+      if (!widget.editMode)
+        Center(
+          child: Text(
+            'Please switch to edit mode to change your password',
+            style: TextStyle(color: AppElements.textOnBackground.color()),
+          ),
+        ),
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -456,52 +462,30 @@ class _AccountInfoState extends State<AccountInfo> {
                               _emailController.text)
                           .then((result) {
                         Navigator.of(context).pop();
-                        if (result is bool && result) {
-                          _oldEmail = _emailController.text;
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                Future.delayed(Duration(seconds: 1), () {
-                                  Navigator.of(context).pop();
-                                  _switchEditMode();
-                                });
-                                return AlertDialog(
-                                  backgroundColor: AppElements.appbar.color(),
-                                  title: Text(
-                                    'Email changed successfully!',
-                                    style: TextStyle(
-                                      color: AppElements.basicText.color(),
-                                    ),
-                                  ),
-                                );
-                              });
-                        } else if (result is FirebaseAuthException) {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  backgroundColor: AppElements.appbar.color(),
-                                  title: Text(
-                                    result.message,
-                                    style: TextStyle(
-                                      color: AppElements.basicText.color(),
-                                    ),
-                                  ),
-                                  actions: [
-                                    AppButton(
-                                        text: 'OK',
-                                        buttonColor:
-                                            AppElements.simpleCard.color(),
-                                        textColor:
-                                            AppElements.basicText.color(),
-                                        onPressed: () =>
-                                            Navigator.of(context).pop())
-                                  ],
-                                );
-                              });
-                        }
+                        fbAuthSuccessErrorMessage(
+                            result: result,
+                            context: context,
+                            successText: 'Email changed successfully!',
+                            successAction: () {
+                              _oldEmail = _emailController.text;
+                              _switchEditMode();
+                            });
                       });
-                    } else if (_isNewPasswordShouldBeeVisible) {}
+                    } else if (_isNewPasswordShouldBeeVisible) {
+                      await _fbAuth
+                          .changePassword(_oldEmail, _passwordController.text,
+                              _newPasswordController.text)
+                          .then((result) {
+                        Navigator.of(context).pop();
+                        fbAuthSuccessErrorMessage(
+                            result: result,
+                            context: context,
+                            successText: 'Password changed successfully!',
+                            successAction: () {
+                              _switchEditMode();
+                            });
+                      });
+                    }
                   }),
               AppButton(
                   text: 'NO',

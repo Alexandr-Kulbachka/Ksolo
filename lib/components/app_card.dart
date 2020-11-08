@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../enums/app_elements.dart';
 import '../style/app_color_scheme.dart';
 
 class AppCard extends StatelessWidget {

@@ -1,3 +1,4 @@
+import 'package:Ksolo/components/fb_auth_success_error_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import '../../../components/circled_button.dart';
 import '../../../app/services/app_color_service.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_field.dart';
-import '../../../enums/app_elements.dart';
 import '../../../style/app_color_scheme.dart';
 
 class Registration extends StatefulWidget {
@@ -117,53 +117,14 @@ class _RegistrationState extends State<Registration> {
                         if (_canSave) {
                           var result = await _fbAuth.register(
                               _emailController.text, _passwordController.text);
-                          if (result is User) {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    Navigator.of(context)
-                                        .pushReplacementNamed('/main');
-                                  });
-                                  return AlertDialog(
-                                    backgroundColor: AppElements.appbar.color(),
-                                    title: Text(
-                                      'Account successfully created!',
-                                      style: TextStyle(
-                                        color: AppElements.basicText.color(),
-                                      ),
-                                    ),
-                                  );
-                                });
-                          } else if (result is FirebaseAuthException) {
-                            if (result.code == 'email-already-in-use') {
-                              setState(() {
-                                _isEmailValid = false;
+                          fbAuthSuccessErrorMessage(
+                              result: result,
+                              context: context,
+                              successText: 'Account successfully created!',
+                              onPopAction: (BuildContext context) {
+                                Navigator.of(context)
+                                    .pushReplacementNamed('/main');
                               });
-                            }
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    backgroundColor: AppElements.appbar.color(),
-                                    title: Text(
-                                      result.message,
-                                      style: TextStyle(
-                                        color: AppElements.basicText.color(),
-                                      ),
-                                    ),
-                                    actions: [
-                                      AppButton(
-                                          text: 'OK',
-                                          buttonColor: AppElements.simpleCard.color(),
-                                          textColor:
-                                              AppElements.basicText.color(),
-                                          onPressed: () =>
-                                              Navigator.of(context).pop())
-                                    ],
-                                  );
-                                });
-                          }
                         }
                       }),
                 ))

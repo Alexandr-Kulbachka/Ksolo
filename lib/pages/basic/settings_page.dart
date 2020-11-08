@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import '../../app/services/app_color_service.dart';
 import '../../components/app_card.dart';
 import 'package:provider/provider.dart';
-import '../../enums/app_elements.dart';
 import '../../style/app_color_scheme.dart';
 
 class Settings extends StatefulWidget {

@@ -2,7 +2,22 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import '../app/services/app_color_service.dart';
-import '../enums/app_elements.dart';
+
+enum AppElements {
+  appbar,
+  bottomNavigationBar,
+  bottomNavigationBarItem,
+  basicText,
+  textOnBackground,
+  textFieldEnabled,
+  textFieldDisabled,
+  simpleCard,
+  enabledButton,
+  disabledButton,
+  background,
+  border,
+  appbarButton
+}
 
 enum AppColorSchemes { standard, dark }
 
@@ -40,6 +55,7 @@ extension AppElementsExtension on AppElements {
               return Colors.white;
             case AppElements.basicText:
               return Colors.white;
+            case AppElements.textOnBackground:
             case AppElements.bottomNavigationBar:
             case AppElements.appbar:
             case AppElements.enabledButton:
@@ -64,6 +80,7 @@ extension AppElementsExtension on AppElements {
             case AppElements.background:
               return Colors.grey[900];
             case AppElements.basicText:
+            case AppElements.textOnBackground:
               return Colors.white;
             case AppElements.bottomNavigationBar:
             case AppElements.appbar:

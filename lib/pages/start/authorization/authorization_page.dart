@@ -1,3 +1,4 @@
+import 'package:Ksolo/components/fb_auth_success_error_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import '../../../app/services/app_color_service.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_field.dart';
 import '../../../components/circled_button.dart';
-import '../../../enums/app_elements.dart';
 import '../../../style/app_color_scheme.dart';
 
 class Authorization extends StatefulWidget {
@@ -87,33 +87,14 @@ class _AuthorizationState extends State<Authorization> {
                         if (_allFieldsFilled) {
                           var result = await _fbAuth.signInWithEmailAndPassword(
                               _emailController.text, _passwordController.text);
-                          if (result is User) {
-                            Navigator.of(context).pushReplacementNamed('/main');
-                          } else if (result is FirebaseAuthException) {
-                            _handleErrors(result.code);
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    backgroundColor: AppElements.appbar.color(),
-                                    title: Text(
-                                      result.message,
-                                      style: TextStyle(
-                                        color: AppElements.basicText.color(),
-                                      ),
-                                    ),
-                                    actions: [
-                                      AppButton(
-                                          text: 'OK',
-                                          buttonColor: AppElements.simpleCard.color(),
-                                          textColor:
-                                              AppElements.basicText.color(),
-                                          onPressed: () =>
-                                              Navigator.of(context).pop())
-                                    ],
-                                  );
-                                });
-                          }
+                          fbAuthSuccessErrorMessage(
+                              result: result,
+                              context: context,
+                              successAction: () {
+                                Navigator.of(context)
+                                    .pushReplacementNamed('/main');
+                              },
+                              errorAction: () => _handleErrors(result.code));
                         }
                       }),
                 ))

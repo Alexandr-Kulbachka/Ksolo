@@ -6,7 +6,6 @@ import '../../app/services/tasks_service.dart';
 import '../../components/app_card.dart';
 import '../../app/services/app_color_service.dart';
 import '../../components/circled_button.dart';
-import '../../enums/app_elements.dart';
 import '../../style/app_color_scheme.dart';
 
 class Home extends StatefulWidget {
@@ -61,7 +60,7 @@ class _HomeState extends State<Home> {
                     'No tasks',
                     style: TextStyle(
                       fontSize: 25,
-                      color: AppColorService.currentAppColorScheme.mainColor,
+                      color: AppElements.textOnBackground.color(),
                     ),
                   )
                 : ListView.builder(
