@@ -22,20 +22,34 @@ class _SettingsState extends State<Settings> {
       return Scaffold(
         backgroundColor: AppElements.background.color(),
         appBar: AppBar(
+          leading: Container(),
           backgroundColor: AppElements.appbar.color(),
           title: Text('SETTINGS'),
         ),
         body: Container(
           margin: EdgeInsets.all(10),
           child: ListView(
-            children: <Widget>[_settingsButton()],
+            children: <Widget>[
+              _settingsButton(
+                  icon: Icons.person,
+                  title: 'Account',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/settings/account_info');
+                  }),
+              _settingsButton(
+                  icon: Icons.visibility,
+                  title: 'Appearance',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/settings/appearance');
+                  })
+            ],
           ),
         ),
       );
     });
   }
 
-  Widget _settingsButton() {
+  Widget _settingsButton({IconData icon, String title, Function onTap}) {
     return GestureDetector(
       child: AppCard(
         Row(
@@ -44,12 +58,12 @@ class _SettingsState extends State<Settings> {
             Container(
                 margin: EdgeInsets.all(15),
                 child: Icon(
-                  Icons.visibility,
+                  icon,
                   color: AppElements.basicText.color(),
                   size: 40,
                 )),
             Text(
-              'Appearance',
+              title,
               style:
                   TextStyle(color: AppElements.basicText.color(), fontSize: 20),
             ),
@@ -64,9 +78,7 @@ class _SettingsState extends State<Settings> {
         ),
         color: AppElements.simpleCard.color(),
       ),
-      onTap: () {
-        Navigator.pushNamed(context, '/settings/color_scheme');
-      },
+      onTap: onTap,
     );
   }
 }

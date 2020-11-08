@@ -71,16 +71,25 @@ class _HomeState extends State<Home> {
                           child: AppCard(
                             Column(
                               children: [
-                                Row(
-                                  children: [
-                                    Text(task.title,
+                                Row(children: [
+                                  Flexible(
+                                    flex: 3,
+                                    child: Container(
+                                      child: Text(
+                                        task.title,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: false,
+                                        maxLines: 1,
                                         style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                AppElements.basicText.color())),
-                                  ],
-                                ),
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppElements.basicText.color(),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer()
+                                ]),
                                 Row(children: [
                                   Flexible(
                                       child: Text(

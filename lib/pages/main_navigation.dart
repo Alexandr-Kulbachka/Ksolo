@@ -25,37 +25,40 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return Consumer<AppColorService>(
         builder: (context, appColorService, child) {
-      return Scaffold(
-        backgroundColor: AppElements.background.color(),
-        body: mainPages[currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: AppElements.bottomNavigationBar.color(),
-          showUnselectedLabels: false,
-          unselectedLabelStyle: TextStyle(fontSize: 13),
-          unselectedItemColor: AppCustomColors.inactiveElement,
-          selectedLabelStyle: TextStyle(fontSize: 16),
-          selectedItemColor: AppElements.bottomNavigationBarItem.color(),
-          currentIndex: currentIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
+      return WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: AppElements.background.color(),
+          body: mainPages[currentIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: AppElements.bottomNavigationBar.color(),
+            showUnselectedLabels: false,
+            unselectedLabelStyle: TextStyle(fontSize: 13),
+            unselectedItemColor: AppCustomColors.inactiveElement,
+            selectedLabelStyle: TextStyle(fontSize: 16),
+            selectedItemColor: AppElements.bottomNavigationBarItem.color(),
+            currentIndex: currentIndex,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                ),
+                label: 'Home',
               ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.settings,
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.settings,
+                ),
+                label: 'Settings',
               ),
-              label: 'Settings',
-            ),
-          ],
-          onTap: (index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
+            ],
+            onTap: (index) {
+              setState(() {
+                currentIndex = index;
+              });
+            },
+          ),
         ),
       );
     });

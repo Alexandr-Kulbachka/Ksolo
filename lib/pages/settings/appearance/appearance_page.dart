@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../app/services/app_color_service.dart';
-import '../../components/app_button.dart';
-import '../../components/app_card.dart';
 import 'package:provider/provider.dart';
-import '../../enums/app_elements.dart';
-import '../../style/app_color_scheme.dart';
+
+import '../../../app/services/app_color_service.dart';
+import '../../../components/app_button.dart';
+import '../../../components/app_card.dart';
+import '../../../enums/app_elements.dart';
+import '../../../style/app_color_scheme.dart';
+
 
 class Appearance extends StatefulWidget {
   Appearance({Key key}) : super(key: key);
@@ -93,15 +95,12 @@ class _AppearanceState extends State<Appearance> {
             alignment: Alignment.bottomCenter,
             child: AppButton(
               margin: EdgeInsets.only(bottom: 10),
-              padding: EdgeInsets.all(10),
               text: 'SAVE',
               textSize: 20,
               textColor:
                   AppElements.basicText.color(colorScheme: selectedScheme),
               buttonColor:
                   AppElements.enabledButton.color(colorScheme: selectedScheme),
-              maxHeight: 70,
-              maxWidth: 150,
               onPressed: () => setState(() {
                 appColorService.currentColorScheme = selectedScheme;
                 Navigator.pop(context);

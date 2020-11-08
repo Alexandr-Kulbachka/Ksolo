@@ -12,7 +12,8 @@ import '../../style/app_color_scheme.dart';
 
 class Task extends StatefulWidget {
   final int index;
-  Task({Key key, this.index}) : super(key: key);
+  bool editMode;
+  Task({Key key, this.index, this.editMode = false}) : super(key: key);
 
   @override
   _TaskState createState() => _TaskState();
@@ -157,22 +158,23 @@ class _TaskState extends State<Task> {
                 ),
               ),
             ),
-            Positioned(
-                child: Align(
-              alignment: Alignment.bottomCenter,
-              child: AppButton(
-                  margin: EdgeInsets.only(bottom: 10),
-                  padding: EdgeInsets.all(10),
-                  text: 'SAVE',
-                  textSize: 20,
-                  textColor: AppElements.basicText.color(),
-                  buttonColor: true
-                      ? AppElements.enabledButton.color()
-                      : AppElements.disabledButton.color(),
-                  maxHeight: 70,
-                  maxWidth: 150,
-                  onPressed: () {}),
-            ))
+            if (widget.editMode)
+              Positioned(
+                  child: Align(
+                alignment: Alignment.bottomCenter,
+                child: AppButton(
+                    margin: EdgeInsets.only(bottom: 10),
+                    padding: EdgeInsets.all(10),
+                    text: 'SAVE',
+                    textSize: 20,
+                    textColor: AppElements.basicText.color(),
+                    buttonColor: true
+                        ? AppElements.enabledButton.color()
+                        : AppElements.disabledButton.color(),
+                    height: 70,
+                    width: 150,
+                    onPressed: () {}),
+              ))
           ],
         ),
         onTap: () {

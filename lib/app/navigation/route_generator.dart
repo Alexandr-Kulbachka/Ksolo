@@ -1,10 +1,11 @@
+import 'package:Ksolo/pages/settings/accountInfo/account_info_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../pages/appearance/appearance_page.dart';
 import '../../pages/basic/home_page.dart';
 import '../../pages/basic/settings_page.dart';
 import '../../pages/main_navigation.dart';
+import '../../pages/settings/appearance/appearance_page.dart';
 import '../../pages/start/authorization/authorization_page.dart';
 import '../../pages/start/registration/registration_page.dart';
 import '../../pages/start/start_page.dart';
@@ -46,8 +47,11 @@ class RouteGenerator {
           page = Settings();
         }
         break;
-      case '/settings/color_scheme':
+      case '/settings/appearance':
         page = Appearance();
+        break;
+      case '/settings/account_info':
+        page = AccountInfo();
         break;
       default:
         return _errorRoute();

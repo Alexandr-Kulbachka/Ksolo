@@ -1,9 +1,9 @@
 import 'package:Ksolo/enums/app_elements.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../style/app_color_scheme.dart';
+import '../../../style/app_color_scheme.dart';
 
-class RightButtonBackground extends CustomPainter {
+class LeftButtonBackground extends CustomPainter {
   var _path = Path();
 
   @override
@@ -13,13 +13,12 @@ class RightButtonBackground extends CustomPainter {
         AppElements.appbar.color(),
         AppElements.simpleCard.color(),
       ]).createShader(Rect.fromCircle(
-        center: Offset(size.width * 0.75, size.height * 0.75),
+        center: Offset(size.width * 0.25, size.height * 0.25),
         radius: size.height,
       ));
-    _path.moveTo(size.width, size.height);
-    _path.lineTo(size.width * 0.25, size.height);
     _path.lineTo(size.width * 0.75, 0);
-    _path.lineTo(size.width, 0);
+    _path.lineTo(size.width * 0.25, size.height);
+    _path.lineTo(0, size.height);
     _path.close();
     canvas.drawPath(_path, paint);
   }

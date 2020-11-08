@@ -138,15 +138,12 @@ class _NewTaskState extends State<NewTask> {
                 alignment: Alignment.bottomCenter,
                 child: AppButton(
                     margin: EdgeInsets.only(bottom: 10),
-                    padding: EdgeInsets.all(10),
                     text: 'SAVE',
                     textSize: 20,
                     textColor: AppElements.basicText.color(),
                     buttonColor: canSave
                         ? AppElements.enabledButton.color()
                         : AppElements.disabledButton.color(),
-                    maxHeight: 70,
-                    maxWidth: 150,
                     onPressed: () {
                       if (canSave) {
                         setState(() {

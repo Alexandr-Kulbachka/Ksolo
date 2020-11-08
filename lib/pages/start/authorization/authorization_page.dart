@@ -81,8 +81,8 @@ class _AuthorizationState extends State<Authorization> {
                       buttonColor: _allFieldsFilled
                           ? AppElements.enabledButton.color()
                           : AppElements.disabledButton.color(),
-                      maxHeight: 70,
-                      maxWidth: 150,
+                      height: 70,
+                      width: 150,
                       onPressed: () async {
                         if (_allFieldsFilled) {
                           var result = await _fbAuth.signInWithEmailAndPassword(
@@ -104,8 +104,8 @@ class _AuthorizationState extends State<Authorization> {
                                     ),
                                     actions: [
                                       AppButton(
-                                          size: 50,
                                           text: 'OK',
+                                          buttonColor: AppElements.simpleCard.color(),
                                           textColor:
                                               AppElements.basicText.color(),
                                           onPressed: () =>

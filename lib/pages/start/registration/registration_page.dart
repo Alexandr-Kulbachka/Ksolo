@@ -111,8 +111,8 @@ class _RegistrationState extends State<Registration> {
                       buttonColor: _canSave
                           ? AppElements.enabledButton.color()
                           : AppElements.disabledButton.color(),
-                      maxHeight: 70,
-                      maxWidth: 150,
+                      height: 70,
+                      width: 150,
                       onPressed: () async {
                         if (_canSave) {
                           var result = await _fbAuth.register(
@@ -154,8 +154,8 @@ class _RegistrationState extends State<Registration> {
                                     ),
                                     actions: [
                                       AppButton(
-                                          size: 50,
                                           text: 'OK',
+                                          buttonColor: AppElements.simpleCard.color(),
                                           textColor:
                                               AppElements.basicText.color(),
                                           onPressed: () =>
