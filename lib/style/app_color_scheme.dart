@@ -15,18 +15,20 @@ enum AppElements {
   enabledButton,
   disabledButton,
   background,
+  gradientBackgroundStart,
+  gradientBackgroundEnd,
   border,
   appbarButton
 }
 
-enum AppColorSchemes { standard, dark }
+enum AppColorScheme { standard, dark }
 
-extension MainColorSchemeInfoExtension on AppColorSchemes {
+extension MainColorSchemeInfoExtension on AppColorScheme {
   Color get mainColor {
     switch (this) {
-      case AppColorSchemes.standard:
+      case AppColorScheme.standard:
         return Colors.teal[800];
-      case AppColorSchemes.dark:
+      case AppColorScheme.dark:
         return Colors.white12;
       default:
         return null;
@@ -35,9 +37,9 @@ extension MainColorSchemeInfoExtension on AppColorSchemes {
 
   String get name {
     switch (this) {
-      case AppColorSchemes.standard:
+      case AppColorScheme.standard:
         return 'Standard mode';
-      case AppColorSchemes.dark:
+      case AppColorScheme.dark:
         return 'Dark mode';
       default:
         return null;
@@ -45,24 +47,37 @@ extension MainColorSchemeInfoExtension on AppColorSchemes {
   }
 }
 
+AppColorScheme getAppColorSchemeByName(String appColorSchemeName) {
+  switch (appColorSchemeName) {
+    case 'Standard mode':
+      return AppColorScheme.standard;
+    case 'Dark mode':
+      return AppColorScheme.dark;
+    default:
+      return null;
+  }
+}
+
 extension AppElementsExtension on AppElements {
-  Color color({AppColorSchemes colorScheme}) {
+  Color color({AppColorScheme colorScheme}) {
     switch (colorScheme ?? AppColorService.currentAppColorScheme) {
-      case AppColorSchemes.standard:
+      case AppColorScheme.standard:
         {
           switch (this) {
             case AppElements.background:
               return Colors.white;
             case AppElements.basicText:
               return Colors.white;
+            case AppElements.gradientBackgroundStart:
             case AppElements.textOnBackground:
             case AppElements.bottomNavigationBar:
             case AppElements.appbar:
             case AppElements.enabledButton:
             case AppElements.textFieldEnabled:
-              return AppColorSchemes.standard.mainColor;
+              return AppColorScheme.standard.mainColor;
             case AppElements.bottomNavigationBarItem:
               return Colors.white;
+            case AppElements.gradientBackgroundEnd:
             case AppElements.appbarButton:
             case AppElements.simpleCard:
               return Colors.teal[300];
@@ -70,11 +85,11 @@ extension AppElementsExtension on AppElements {
             case AppElements.textFieldDisabled:
               return Colors.grey[400];
             default:
-              return AppColorSchemes.standard.mainColor;
+              return AppColorScheme.standard.mainColor;
           }
         }
         break;
-      case AppColorSchemes.dark:
+      case AppColorScheme.dark:
         {
           switch (this) {
             case AppElements.background:
@@ -88,14 +103,17 @@ extension AppElementsExtension on AppElements {
             case AppElements.appbarButton:
             case AppElements.simpleCard:
             case AppElements.textFieldDisabled:
+            case AppElements.gradientBackgroundStart:
               return Colors.grey[800];
+            case AppElements.gradientBackgroundEnd:
+              return Colors.grey[400];
             case AppElements.enabledButton:
               return Colors.grey[400];
             case AppElements.textFieldEnabled:
             case AppElements.bottomNavigationBarItem:
               return Colors.white;
             default:
-              return AppColorSchemes.dark.mainColor;
+              return AppColorScheme.dark.mainColor;
           }
         }
         break;

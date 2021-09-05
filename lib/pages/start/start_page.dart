@@ -19,8 +19,7 @@ class _StartState extends State<Start> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppColorService>(
-        builder: (context, appColorService, child) {
+    return Consumer<AppColorService>(builder: (context, appColorService, child) {
       var height = MediaQuery.of(context).size.height;
       var width = MediaQuery.of(context).size.width;
 
@@ -36,65 +35,65 @@ class _StartState extends State<Start> {
                   style: TextStyle(color: AppElements.basicText.color()),
                 ),
               ),
-              body: FutureBuilder(
-                future: _initialization,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return _somethingWentWrong();
-                  }
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return Stack(children: [
-                      GestureDetector(
-                        child: FractionallySizedBox(
-                          widthFactor: 1,
-                          heightFactor: 1,
-                          child: CustomPaint(
-                            painter: LeftButtonBackground(),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  top: height * 0.2, left: width * 0.1),
-                              child: Text(
-                                'Create account',
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppElements.basicText.color()),
+              body: AppColorService.currentAppColorScheme == null
+                  ? _loading()
+                  : FutureBuilder(
+                      future: _initialization,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return _somethingWentWrong();
+                        }
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return Stack(children: [
+                            GestureDetector(
+                              child: FractionallySizedBox(
+                                widthFactor: 1,
+                                heightFactor: 1,
+                                child: CustomPaint(
+                                  painter: LeftButtonBackground(),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: height * 0.2, left: width * 0.1),
+                                    child: Text(
+                                      'Create account',
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppElements.basicText.color()),
+                                    ),
+                                  ),
+                                ),
                               ),
+                              onTap: () {
+                                Navigator.of(context).pushNamed('/registration');
+                              },
                             ),
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pushNamed('/registration');
-                        },
-                      ),
-                      GestureDetector(
-                        child: FractionallySizedBox(
-                          widthFactor: 1,
-                          heightFactor: 1,
-                          child: CustomPaint(
-                            painter: RightButtonBackground(),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  top: height * 0.65, left: width * 0.65),
-                              child: Text(
-                                'Sign in',
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppElements.basicText.color()),
+                            GestureDetector(
+                              child: FractionallySizedBox(
+                                widthFactor: 1,
+                                heightFactor: 1,
+                                child: CustomPaint(
+                                  painter: RightButtonBackground(),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: height * 0.65, left: width * 0.65),
+                                    child: Text(
+                                      'Sign in',
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppElements.basicText.color()),
+                                    ),
+                                  ),
+                                ),
                               ),
+                              onTap: () {
+                                Navigator.of(context).pushNamed('/authorization');
+                              },
                             ),
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).pushNamed('/authorization');
-                        },
-                      ),
-                    ]);
-                  }
-                  return _loading();
-                },
-              )));
+                          ]);
+                        }
+                        return _loading();
+                      },
+                    )));
     });
   }
 

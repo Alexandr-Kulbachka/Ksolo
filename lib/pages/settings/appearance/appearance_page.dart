@@ -16,7 +16,7 @@ class Appearance extends StatefulWidget {
 }
 
 class _AppearanceState extends State<Appearance> {
-  AppColorSchemes selectedScheme;
+  AppColorScheme selectedScheme;
   AppColorService appColorService;
 
   @override
@@ -61,7 +61,7 @@ class _AppearanceState extends State<Appearance> {
                         child: Container(
                           height: 30,
                           width: 30,
-                          child: AppColorSchemes.values[index] == selectedScheme
+                          child: AppColorScheme.values[index] == selectedScheme
                               ? Icon(
                                   Icons.done_outline,
                                   color: Colors.green,
@@ -70,7 +70,7 @@ class _AppearanceState extends State<Appearance> {
                         ),
                       ),
                       Text(
-                        AppColorSchemes.values[index].name,
+                        AppColorScheme.values[index].name,
                         style: TextStyle(
                           color: AppElements.basicText
                               .color(colorScheme: selectedScheme),
@@ -83,11 +83,11 @@ class _AppearanceState extends State<Appearance> {
                       AppElements.simpleCard.color(colorScheme: selectedScheme),
                 ),
                 onTap: () => setState(() {
-                  selectedScheme = AppColorSchemes.values[index];
+                  selectedScheme = AppColorScheme.values[index];
                 }),
               );
             },
-            itemCount: AppColorSchemes.values.length,
+            itemCount: AppColorScheme.values.length,
           ),
           Positioned.fill(
               child: Align(

@@ -9,8 +9,8 @@ class LeftButtonBackground extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..shader = RadialGradient(colors: [
-        AppElements.appbar.color(),
-        AppElements.simpleCard.color(),
+        AppElements.gradientBackgroundStart.color(),
+        AppElements.gradientBackgroundEnd.color(),
       ]).createShader(Rect.fromCircle(
         center: Offset(size.width * 0.25, size.height * 0.25),
         radius: size.height,
