@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,32 +14,38 @@ void fbAuthSuccessErrorMessage(
     Function successAction,
     Function errorAction,
     Function(BuildContext context) onPopAction}) {
-  if (result is bool && result) {
-    if (successText != null) {
-      showDialog(
-          context: context,
-          builder: (cxt) {
-            if (successAction != null) {
-              successAction();
-            }
-            return (AlertDialog(
-              backgroundColor: AppElements.appbar.color(),
-              title: Text(
-                successText,
-                style: TextStyle(
-                  color: AppElements.basicText.color(),
+  if (result is bool) {
+    if (result) {
+      if (successText != null) {
+        showDialog(
+            context: context,
+            builder: (cxt) {
+              if (successAction != null) {
+                successAction();
+              }
+              return (AlertDialog(
+                backgroundColor: AppElements.appbar.color(),
+                title: Text(
+                  successText,
+                  style: TextStyle(
+                    color: AppElements.basicText.color(),
+                  ),
                 ),
-              ),
-            ));
-          }).whenComplete(() => Future.delayed(
-          Duration(seconds: 1),
-          onPopAction != null
-              ? onPopAction
-              : () {
-                  Navigator.of(context, rootNavigator: true).pop(result);
-                }));
+              ));
+            }).whenComplete(() => Future.delayed(
+            Duration(seconds: 1),
+            onPopAction != null
+                ? onPopAction
+                : () {
+                    Navigator.of(context, rootNavigator: true).pop(result);
+                  }));
+      } else {
+        successAction();
+      }
     } else {
-      successAction();
+      if (errorAction != null) {
+        errorAction();
+      }
     }
   } else if (result is FirebaseAuthException) {
     if (errorAction != null) {
@@ -58,7 +64,7 @@ void fbAuthSuccessErrorMessage(
             ),
             actions: [
               AppButton(
-                  text: 'OK',
+                  text: AppLocalizations.of(context).ok,
                   buttonColor: AppElements.simpleCard.color(),
                   textColor: AppElements.basicText.color(),
                   onPressed: () {

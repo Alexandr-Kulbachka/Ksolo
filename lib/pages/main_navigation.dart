@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../app/services/app_color_service.dart';
 import '../pages/basic/settings_page.dart';
-import 'package:provider/provider.dart';
-
 import '../style/app_custom_colors.dart';
 import '../style/app_color_scheme.dart';
 import 'basic/home_page.dart';
@@ -22,16 +23,13 @@ class _MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppColorService>(
-        builder: (context, appColorService, child) {
+    return Consumer<AppColorService>(builder: (context, appColorService, child) {
       return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-          backgroundColor: AppElements.background.color(),
           body: mainPages[currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            backgroundColor: AppElements.bottomNavigationBar.color(),
             showUnselectedLabels: false,
             unselectedLabelStyle: TextStyle(fontSize: 13),
             unselectedItemColor: AppCustomColors.inactiveElement,
@@ -43,13 +41,13 @@ class _MainNavigationState extends State<MainNavigation> {
                 icon: Icon(
                   Icons.home,
                 ),
-                label: 'Home',
+                label: AppLocalizations.of(context).mainSmall,
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.settings,
                 ),
-                label: 'Settings',
+                label: AppLocalizations.of(context).settingsSmall,
               ),
             ],
             onTap: (index) {

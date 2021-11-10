@@ -30,8 +30,7 @@ class FBAuth {
     return true;
   }
 
-  Future<dynamic> signInWithEmailAndPassword(
-      String email, String password) async {
+  Future<dynamic> signInWithEmailAndPassword(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(
         email: email,
@@ -43,16 +42,19 @@ class FBAuth {
     return true;
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
+  Future<dynamic> signOut() async {
+    try {
+      await _auth.signOut();
+    } catch (exception) {
+      return exception;
+    }
+    return true;
   }
 
-  Future<dynamic> changeEmail(
-      String oldEmail, String password, String newEmail) async {
+  Future<dynamic> changeEmail(String oldEmail, String password, String newEmail) async {
     try {
       await _auth.currentUser
-          .reauthenticateWithCredential(
-              EmailAuthProvider.credential(email: oldEmail, password: password))
+          .reauthenticateWithCredential(EmailAuthProvider.credential(email: oldEmail, password: password))
           .then((value) async {
         await _auth.currentUser.updateEmail(newEmail);
       });
@@ -62,12 +64,10 @@ class FBAuth {
     return true;
   }
 
-  Future<dynamic> changePassword(
-      String oldEmail, String password, String newPassword) async {
+  Future<dynamic> changePassword(String oldEmail, String password, String newPassword) async {
     try {
       await _auth.currentUser
-          .reauthenticateWithCredential(
-              EmailAuthProvider.credential(email: oldEmail, password: password))
+          .reauthenticateWithCredential(EmailAuthProvider.credential(email: oldEmail, password: password))
           .then((value) async {
         await _auth.currentUser.updatePassword(newPassword);
       });

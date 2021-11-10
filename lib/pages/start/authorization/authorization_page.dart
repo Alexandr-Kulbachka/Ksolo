@@ -1,10 +1,10 @@
-import 'package:Ksolo/components/fb_auth_success_error_message.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../app/firebase/firebase_auth.dart';
+import '../../../app/services/account_service.dart';
+import '../../../components/fb_auth_success_error_message.dart';
 import '../../../app/services/app_color_service.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_field.dart';
@@ -19,8 +19,6 @@ class Authorization extends StatefulWidget {
 }
 
 class _AuthorizationState extends State<Authorization> {
-  FBAuth _fbAuth;
-
   TextEditingController _emailController;
   TextEditingController _passwordController;
 
@@ -32,15 +30,12 @@ class _AuthorizationState extends State<Authorization> {
 
   bool _isPasswordObscured = true;
 
-  RegExp _emailRegExp = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp _emailRegExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   bool _allFieldsFilled = false;
 
   @override
   void initState() {
-    _fbAuth = FBAuth.getInstance();
-
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
 
@@ -56,47 +51,41 @@ class _AuthorizationState extends State<Authorization> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppColorService>(
-        builder: (context, appColorService, child) {
+    return Consumer2<AppColorService, AccountService>(builder: (context, appColorService, accountService, child) {
       return Scaffold(
-          backgroundColor: AppElements.background.color(),
           appBar: AppBar(
-            backgroundColor: AppElements.appbar.color(),
-            title: Text('Authorization'),
+            title: Text(AppLocalizations.of(context).authorization),
           ),
           body: GestureDetector(
             child: Stack(
               fit: StackFit.expand,
               children: [
-                _fields(),
+                ListView(
+                  children: [_fields(accountService)],
+                ),
                 Positioned(
                     child: Align(
                   alignment: Alignment.bottomCenter,
                   child: AppButton(
                       margin: EdgeInsets.only(bottom: 10),
                       padding: EdgeInsets.all(10),
-                      text: 'SIGN IN',
+                      text: AppLocalizations.of(context).signIn,
                       textSize: 20,
-                      textColor: AppElements.basicText.color(),
-                      buttonColor: _allFieldsFilled
-                          ? AppElements.enabledButton.color()
-                          : AppElements.disabledButton.color(),
                       height: 70,
                       width: 150,
-                      onPressed: () async {
-                        if (_allFieldsFilled) {
-                          var result = await _fbAuth.signInWithEmailAndPassword(
-                              _emailController.text, _passwordController.text);
-                          fbAuthSuccessErrorMessage(
-                              result: result,
-                              context: context,
-                              successAction: () {
-                                Navigator.of(context)
-                                    .pushReplacementNamed('/main');
-                              },
-                              errorAction: () => _handleErrors(result.code));
-                        }
-                      }),
+                      onPressed: _allFieldsFilled
+                          ? () async {
+                              var result = await accountService.signInWithEmailAndPassword(
+                                  email: _emailController.text, password: _passwordController.text);
+                              fbAuthSuccessErrorMessage(
+                                  result: result,
+                                  context: context,
+                                  successAction: () {
+                                    Navigator.of(context).pushReplacementNamed('/main');
+                                  },
+                                  errorAction: () => _handleErrors(result.code));
+                            }
+                          : null),
                 ))
               ],
             ),
@@ -125,89 +114,122 @@ class _AuthorizationState extends State<Authorization> {
     }
   }
 
-  Widget _fields() {
-    return Column(children: [
-      AppTextField(
-        padding: EdgeInsets.all(10),
-        fieldController: _emailController,
-        fieldFocusNode: _emailFocusNode,
-        maxLines: 1,
-        cursorColor: AppColorService.currentAppColorScheme.mainColor,
-        labelText: "Input email",
-        labelColor: _emailFocusNode.hasFocus || _emailController.text.length > 0
-            ? AppElements.textFieldEnabled.color()
-            : AppElements.textFieldDisabled.color(),
-        enabledBorderColor: AppElements.textFieldEnabled.color(),
-        disabledBorderColor: _emailController.text.length > 0
-            ? AppElements.textFieldEnabled.color()
-            : AppElements.textFieldDisabled.color(),
-        errorText: _isEmailValid || _emailController.text.isEmpty
-            ? null
-            : "Invalid email",
-        onChanged: (value) {
-          setState(() {
-            if (_emailRegExp.hasMatch(value)) {
-              _isEmailValid = true;
-            } else {
-              _isEmailValid = false;
-            }
-            checkFields();
-          });
-        },
-      ),
-      Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-              child: AppTextField(
-            obscureText: _isPasswordObscured,
-            autocorrect: false,
-            enableSuggestions: false,
-            padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
-            fieldController: _passwordController,
-            fieldFocusNode: _passwordFocusNode,
-            maxLines: 1,
-            cursorColor: AppColorService.currentAppColorScheme.mainColor,
-            labelText: "Input password",
-            labelColor: _passwordFocusNode.hasFocus ||
-                    _passwordController.text.length > 0
-                ? AppElements.textFieldEnabled.color()
-                : AppElements.textFieldDisabled.color(),
-            enabledBorderColor: AppElements.textFieldEnabled.color(),
-            disabledBorderColor: _passwordController.text.length > 0
-                ? AppElements.textFieldEnabled.color()
-                : AppElements.textFieldDisabled.color(),
-            errorText: _isPasswordValid ? null : "Invalid password",
-            onChanged: (value) {
-              setState(() {
-                checkFields();
-              });
-            },
-          )),
-          CircledButton(
-              size: 40,
-              icon: _isPasswordObscured
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-              iconColor: _passwordFocusNode.hasFocus ||
-                      _passwordController.text.length > 0
+  Widget _fields(AccountService accountService) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 80),
+      child: Column(children: [
+        AppTextField(
+          padding: EdgeInsets.all(10),
+          fieldController: _emailController,
+          fieldFocusNode: _emailFocusNode,
+          maxLines: 1,
+          cursorColor: AppColorService.currentAppColorScheme.mainColor,
+          labelText: AppLocalizations.of(context).inputEmail,
+          labelColor: _emailFocusNode.hasFocus || _emailController.text.length > 0
+              ? AppElements.textFieldEnabled.color()
+              : AppElements.textFieldDisabled.color(),
+          enabledBorderColor: AppElements.textFieldEnabled.color(),
+          disabledBorderColor: _emailController.text.length > 0
+              ? AppElements.textFieldEnabled.color()
+              : AppElements.textFieldDisabled.color(),
+          errorText: _isEmailValid || _emailController.text.isEmpty ? null : AppLocalizations.of(context).invalidEmail,
+          onChanged: (value) {
+            setState(() {
+              if (_emailRegExp.hasMatch(value)) {
+                _isEmailValid = true;
+              } else {
+                _isEmailValid = false;
+              }
+              checkFields();
+            });
+          },
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+                child: AppTextField(
+              obscureText: _isPasswordObscured,
+              autocorrect: false,
+              enableSuggestions: false,
+              padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+              fieldController: _passwordController,
+              fieldFocusNode: _passwordFocusNode,
+              maxLines: 1,
+              cursorColor: AppColorService.currentAppColorScheme.mainColor,
+              labelText: AppLocalizations.of(context).inputPassword,
+              labelColor: _passwordFocusNode.hasFocus || _passwordController.text.length > 0
                   ? AppElements.textFieldEnabled.color()
                   : AppElements.textFieldDisabled.color(),
-              onPressed: () {
+              enabledBorderColor: AppElements.textFieldEnabled.color(),
+              disabledBorderColor: _passwordController.text.length > 0
+                  ? AppElements.textFieldEnabled.color()
+                  : AppElements.textFieldDisabled.color(),
+              errorText: _isPasswordValid ? null : AppLocalizations.of(context).invalidPassword,
+              onChanged: (value) {
                 setState(() {
-                  _isPasswordObscured = !_isPasswordObscured;
+                  checkFields();
                 });
-              })
-        ],
-      ),
-    ]);
+              },
+            )),
+            CircledButton(
+                size: 40,
+                icon: _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                iconColor: _passwordFocusNode.hasFocus || _passwordController.text.length > 0
+                    ? AppElements.textFieldEnabled.color()
+                    : AppElements.textFieldDisabled.color(),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordObscured = !_isPasswordObscured;
+                  });
+                })
+          ],
+        ),
+        if (accountService.isRememberMe != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                child: Container(
+                  height: 30,
+                  width: 30,
+                  margin: EdgeInsets.only(right: 20),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                    color: accountService.isRememberMe
+                        ? AppElements.textFieldEnabled.color()
+                        : AppElements.textFieldDisabled.color(),
+                    width: 2,
+                  )),
+                  child: accountService.isRememberMe
+                      ? Icon(
+                          Icons.done,
+                          color: AppElements.textFieldEnabled.color(),
+                        )
+                      : Container(),
+                ),
+                onTap: () {
+                  accountService.isRememberMe = !accountService.isRememberMe;
+                },
+              ),
+              Text(
+                AppLocalizations.of(context).rememberMe,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: accountService.isRememberMe
+                      ? AppElements.textFieldEnabled.color()
+                      : AppElements.textFieldDisabled.color(),
+                ),
+              ),
+            ],
+          )
+      ]),
+    );
   }
 
   void checkFields() {
     _isPasswordValid = true;
-    if (_isEmailValid &&
-        _emailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty) {
+    if (_isEmailValid && _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
       _allFieldsFilled = true;
     } else {
       _allFieldsFilled = false;

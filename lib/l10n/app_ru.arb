@@ -1,0 +1,50 @@
+{
+  "save": "СОХРАНИТЬ",
+  "yes": "ДА",
+  "no": "НЕТ",
+  "ok": "ОК",
+
+  "authorization" : "Авторизация",
+  "signIn": "ВОЙТИ",
+  "inputEmail": "Введите адрес электронной почты",
+  "inputPassword": "Введите пароль",
+  "rememberMe": "Запомнить меня",
+
+  "registration" : "Создать аккаунт",
+  "accountCreated": "Аккаунт успешно создан!",
+  "confirmPassword": "Подтвердите пароль",
+
+  "main": "ГЛАВНАЯ",
+  "mainSmall": "Главная",
+  "settings": "НАСТРОЙКИ",
+  "settingsSmall": "Настройки",
+
+  "accountSettings": "Настройки Аккаунта",
+  "accountInfo": "Информация Аккаунта",
+  "email": "Адрес электронной почты",
+  "invalidEmail": "Недопустимый адрес электронной почты",
+  "switchToEditAccountInfoMode": "Пожалуйста, переключитесь в режим редактирования для смены почты или пароля",
+  "password": "Пароль",
+  "invalidPassword": "Недопустимый пароль",
+  "newPassword": "Новый пароль",
+  "passwordRequirements": "Требования к паролю:",
+  "uppercaseLetter": "Буквы в верхнем регистре",
+  "lowercaseLetter": "Буквы в нижнем регистре",
+  "numericCharacter": "Числовые символы",
+  "specialCharacter": "Специальные символы",
+  "longerThan": "Длиннее 8 символов",
+  "changeEmailQuestion": "Вы уверены, что хотите изменить ваш адрес эллектронной почты?",
+  "changePasswordQuestion": "Вы уверены, что хотите изменить ваш пароль?",
+  "emailSuccessfullyChanged": "Адрес электронной почты изменен успешно!",
+  "passwordSuccessfullyChanged": "Пароль изменен успешно!",
+
+  "appearance": "Внешний вид",
+  "teal": "Бирюзовая тема",
+  "purple": "Фиолетовая тема",
+
+  "language": "Язык",
+  "appLanguageTitle": "Язык Приложения",
+
+  "logout": "Выйти из аккаунта",
+  "logoutQuestion": "Вы уверены, что хотите выйти из аккаунта?"
+}

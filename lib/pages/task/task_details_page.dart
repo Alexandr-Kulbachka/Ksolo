@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../models/task_model.dart';
 import '../../app/services/tasks_service.dart';
@@ -64,7 +65,6 @@ class _TaskState extends State<Task> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppElements.background.color(),
       appBar: AppBar(
         backgroundColor: AppElements.appbar.color(),
         title: Text(
@@ -164,7 +164,7 @@ class _TaskState extends State<Task> {
                 child: AppButton(
                     margin: EdgeInsets.only(bottom: 10),
                     padding: EdgeInsets.all(10),
-                    text: 'SAVE',
+                    text: AppLocalizations.of(context).appLanguageTitle,
                     textSize: 20,
                     textColor: AppElements.basicText.color(),
                     buttonColor: true

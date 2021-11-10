@@ -1,10 +1,10 @@
-import 'package:Ksolo/components/fb_auth_success_error_message.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../app/firebase/firebase_auth.dart';
+import '../../../app/services/account_service.dart';
+import '../../../components/fb_auth_success_error_message.dart';
 import '../../../components/circled_button.dart';
 import '../../../app/services/app_color_service.dart';
 import '../../../components/app_button.dart';
@@ -19,8 +19,6 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> {
-  FBAuth _fbAuth;
-
   TextEditingController _emailController;
   TextEditingController _passwordController;
   TextEditingController _confirmPasswordController;
@@ -42,14 +40,12 @@ class _RegistrationState extends State<Registration> {
   bool _isPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
 
-  RegExp _emailRegExp = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp _emailRegExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   bool _canSave = false;
 
   @override
   void initState() {
-    _fbAuth = FBAuth.getInstance();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
@@ -84,13 +80,10 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppColorService>(
-        builder: (context, appColorService, child) {
+    return Consumer2<AppColorService, AccountService>(builder: (context, appColorService, accountService, child) {
       return Scaffold(
-          backgroundColor: AppElements.background.color(),
           appBar: AppBar(
-            backgroundColor: AppElements.appbar.color(),
-            title: Text('Registration'),
+            title: Text(AppLocalizations.of(context).registration),
           ),
           body: GestureDetector(
             child: Stack(
@@ -105,28 +98,23 @@ class _RegistrationState extends State<Registration> {
                   child: AppButton(
                       margin: EdgeInsets.only(bottom: 10),
                       padding: EdgeInsets.all(10),
-                      text: 'SAVE',
+                      text: AppLocalizations.of(context).save,
                       textSize: 20,
-                      textColor: AppElements.basicText.color(),
-                      buttonColor: _canSave
-                          ? AppElements.enabledButton.color()
-                          : AppElements.disabledButton.color(),
                       height: 70,
                       width: 150,
-                      onPressed: () async {
-                        if (_canSave) {
-                          var result = await _fbAuth.register(
-                              _emailController.text, _passwordController.text);
-                          fbAuthSuccessErrorMessage(
-                              result: result,
-                              context: context,
-                              successText: 'Account successfully created!',
-                              onPopAction: (BuildContext context) {
-                                Navigator.of(context)
-                                    .pushReplacementNamed('/main');
-                              });
-                        }
-                      }),
+                      onPressed: _canSave
+                          ? () async {
+                              var result = await accountService.signInWithEmailAndPassword(
+                                  email: _emailController.text, password: _passwordController.text);
+                              fbAuthSuccessErrorMessage(
+                                  result: result,
+                                  context: context,
+                                  successText: AppLocalizations.of(context).accountCreated,
+                                  onPopAction: (BuildContext context) {
+                                    Navigator.of(context).pushReplacementNamed('/main');
+                                  });
+                            }
+                          : null),
                 ))
               ],
             ),
@@ -148,7 +136,7 @@ class _RegistrationState extends State<Registration> {
         fieldFocusNode: _emailFocusNode,
         maxLines: 1,
         cursorColor: AppColorService.currentAppColorScheme.mainColor,
-        labelText: "Input email",
+        labelText: AppLocalizations.of(context).inputEmail,
         labelColor: _emailFocusNode.hasFocus || _emailController.text.length > 0
             ? AppElements.textFieldEnabled.color()
             : AppElements.textFieldDisabled.color(),
@@ -156,9 +144,7 @@ class _RegistrationState extends State<Registration> {
         disabledBorderColor: _emailController.text.length > 0
             ? AppElements.textFieldEnabled.color()
             : AppElements.textFieldDisabled.color(),
-        errorText: _isEmailValid || _emailController.text.isEmpty
-            ? null
-            : "Invalid email",
+        errorText: _isEmailValid || _emailController.text.isEmpty ? null : AppLocalizations.of(context).invalidEmail,
         onChanged: (value) {
           setState(() {
             if (_emailRegExp.hasMatch(value)) {
@@ -183,9 +169,8 @@ class _RegistrationState extends State<Registration> {
             fieldFocusNode: _passwordFocusNode,
             maxLines: 1,
             cursorColor: AppColorService.currentAppColorScheme.mainColor,
-            labelText: "Input password",
-            labelColor: _passwordFocusNode.hasFocus ||
-                    _passwordController.text.length > 0
+            labelText: AppLocalizations.of(context).inputPassword,
+            labelColor: _passwordFocusNode.hasFocus || _passwordController.text.length > 0
                 ? AppElements.textFieldEnabled.color()
                 : AppElements.textFieldDisabled.color(),
             enabledBorderColor: AppElements.textFieldEnabled.color(),
@@ -194,7 +179,7 @@ class _RegistrationState extends State<Registration> {
                 : AppElements.textFieldDisabled.color(),
             errorText: _isPasswordValid || _passwordController.text.isEmpty
                 ? null
-                : "Invalid password",
+                : AppLocalizations.of(context).invalidPassword,
             onChanged: (value) {
               setState(() {
                 _isPasswordValid = _isPasswordCompliant(value);
@@ -205,11 +190,8 @@ class _RegistrationState extends State<Registration> {
           )),
           CircledButton(
               size: 40,
-              icon: _isPasswordObscured
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-              iconColor: _passwordFocusNode.hasFocus ||
-                      _passwordController.text.length > 0
+              icon: _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+              iconColor: _passwordFocusNode.hasFocus || _passwordController.text.length > 0
                   ? AppElements.textFieldEnabled.color()
                   : AppElements.textFieldDisabled.color(),
               onPressed: () {
@@ -231,19 +213,17 @@ class _RegistrationState extends State<Registration> {
             fieldFocusNode: _confirmPasswordFocusNode,
             maxLines: 1,
             cursorColor: AppColorService.currentAppColorScheme.mainColor,
-            labelText: "Confirm password",
-            labelColor: _confirmPasswordFocusNode.hasFocus ||
-                    _confirmPasswordController.text.length > 0
+            labelText: AppLocalizations.of(context).confirmPassword,
+            labelColor: _confirmPasswordFocusNode.hasFocus || _confirmPasswordController.text.length > 0
                 ? AppElements.textFieldEnabled.color()
                 : AppElements.textFieldDisabled.color(),
             enabledBorderColor: AppElements.textFieldEnabled.color(),
             disabledBorderColor: _confirmPasswordController.text.length > 0
                 ? AppElements.textFieldEnabled.color()
                 : AppElements.textFieldDisabled.color(),
-            errorText: _isConfirmPasswordValid ||
-                    _confirmPasswordController.text.isEmpty
+            errorText: _isConfirmPasswordValid || _confirmPasswordController.text.isEmpty
                 ? null
-                : "Invalid password",
+                : AppLocalizations.of(context).invalidPassword,
             onChanged: (value) {
               setState(() {
                 _isPasswordsMatched();
@@ -253,11 +233,8 @@ class _RegistrationState extends State<Registration> {
           )),
           CircledButton(
               size: 40,
-              icon: _isConfirmPasswordObscured
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-              iconColor: _confirmPasswordFocusNode.hasFocus ||
-                      _confirmPasswordController.text.length > 0
+              icon: _isConfirmPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+              iconColor: _confirmPasswordFocusNode.hasFocus || _confirmPasswordController.text.length > 0
                   ? AppElements.textFieldEnabled.color()
                   : AppElements.textFieldDisabled.color(),
               onPressed: () {
@@ -271,49 +248,53 @@ class _RegistrationState extends State<Registration> {
   }
 
   Widget _passwordRequirements() {
-    return Column(children: [
-      _passwordRequirement(
-          text: 'Password Requirements:',
-          color: _passwordController.text.isEmpty
-              ? Colors.grey
-              : AppElements.appbar.color(),
-          size: 20),
-      _passwordRequirement(
-          text: 'Uppercase letter(s)',
-          color: _passwordController.text.isEmpty
-              ? Colors.grey
-              : _hasUppercase
-                  ? AppElements.appbar.color()
-                  : Colors.red),
-      _passwordRequirement(
-          text: 'Lowercase letter(s)',
-          color: _passwordController.text.isEmpty
-              ? Colors.grey
-              : _hasLowercase
-                  ? AppElements.appbar.color()
-                  : Colors.red),
-      _passwordRequirement(
-          text: 'Numeric character(s)',
-          color: _passwordController.text.isEmpty
-              ? Colors.grey
-              : _hasDigits
-                  ? AppElements.appbar.color()
-                  : Colors.red),
-      _passwordRequirement(
-          text: 'Special character(s)',
-          color: _passwordController.text.isEmpty
-              ? Colors.grey
-              : _hasSpecialCharacters
-                  ? AppElements.appbar.color()
-                  : Colors.red),
-      _passwordRequirement(
-          text: 'Longer than 8 characters',
-          color: _passwordController.text.isEmpty
-              ? Colors.grey
-              : _hasMinLength
-                  ? AppElements.appbar.color()
-                  : Colors.red),
-    ]);
+    return Container(
+      margin: EdgeInsets.only(bottom: 75),
+      child: Column(children: [
+        Container(
+          margin: EdgeInsets.only(bottom: 10),
+          child: _passwordRequirement(
+              text: AppLocalizations.of(context).passwordRequirements,
+              color: _passwordController.text.isEmpty ? Colors.grey : AppElements.textFieldEnabled.color(),
+              size: 22),
+        ),
+        _passwordRequirement(
+            text: AppLocalizations.of(context).uppercaseLetter,
+            color: _passwordController.text.isEmpty
+                ? Colors.grey
+                : _hasUppercase
+                    ? AppElements.textFieldEnabled.color()
+                    : Colors.red),
+        _passwordRequirement(
+            text: AppLocalizations.of(context).lowercaseLetter,
+            color: _passwordController.text.isEmpty
+                ? Colors.grey
+                : _hasLowercase
+                    ? AppElements.textFieldEnabled.color()
+                    : Colors.red),
+        _passwordRequirement(
+            text: AppLocalizations.of(context).numericCharacter,
+            color: _passwordController.text.isEmpty
+                ? Colors.grey
+                : _hasDigits
+                    ? AppElements.textFieldEnabled.color()
+                    : Colors.red),
+        _passwordRequirement(
+            text: AppLocalizations.of(context).specialCharacter,
+            color: _passwordController.text.isEmpty
+                ? Colors.grey
+                : _hasSpecialCharacters
+                    ? AppElements.textFieldEnabled.color()
+                    : Colors.red),
+        _passwordRequirement(
+            text: AppLocalizations.of(context).longerThan,
+            color: _passwordController.text.isEmpty
+                ? Colors.grey
+                : _hasMinLength
+                    ? AppElements.textFieldEnabled.color()
+                    : Colors.red),
+      ]),
+    );
   }
 
   Widget _passwordRequirement({String text, Color color, double size}) {
@@ -337,15 +318,10 @@ class _RegistrationState extends State<Registration> {
     _hasUppercase = password.contains(new RegExp(r'[A-Z]'));
     _hasDigits = password.contains(new RegExp(r'[0-9]'));
     _hasLowercase = password.contains(new RegExp(r'[a-z]'));
-    _hasSpecialCharacters =
-        password.contains(new RegExp(r'[!@#$%^&*(),.?"_:{}|<>+-]'));
+    _hasSpecialCharacters = password.contains(new RegExp(r'[!@#$%^&*(),.?"_:{}|<>+-]'));
     _hasMinLength = password.length > minLength;
 
-    return _hasDigits &
-        _hasUppercase &
-        _hasLowercase &
-        _hasSpecialCharacters &
-        _hasMinLength;
+    return _hasDigits & _hasUppercase & _hasLowercase & _hasSpecialCharacters & _hasMinLength;
   }
 
   void _isPasswordsMatched() {

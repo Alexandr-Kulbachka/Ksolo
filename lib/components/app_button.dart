@@ -10,6 +10,7 @@ class AppButton extends StatelessWidget {
   final Color textColor;
   final double height;
   final double width;
+  final bool disabled;
   final void Function() onPressed;
 
   AppButton({
@@ -21,14 +22,14 @@ class AppButton extends StatelessWidget {
     this.textSize,
     this.height = 0,
     this.width = 0,
+    this.disabled = false,
     @required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height != 0 ? height : 40,
-      width: width != 0 ? width : 150,
+      constraints: BoxConstraints(minWidth: width != 0 ? width : 150, minHeight: height != 0 ? height : 40),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       margin: margin ?? EdgeInsets.all(0),
       padding: padding ?? EdgeInsets.all(0),
@@ -41,7 +42,7 @@ class AppButton extends StatelessWidget {
             fontSize: textSize,
           ),
         ),
-        onPressed: onPressed,
+        onPressed: disabled ? null : onPressed,
       ),
     );
   }

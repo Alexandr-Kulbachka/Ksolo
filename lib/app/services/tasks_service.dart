@@ -5,7 +5,7 @@ class TasksService extends ChangeNotifier {
   List<TaskModel> _tasks;
 
   TasksService() {
-    _tasks = List<TaskModel>();
+    _tasks = <TaskModel>[];
   }
 
   get size => _tasks.length;

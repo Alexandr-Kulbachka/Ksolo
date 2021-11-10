@@ -17,21 +17,20 @@ class AppColorService extends ChangeNotifier {
     notifyListeners();
   }
 
-  get currentColorScheme {
-    if (currentAppColorScheme != null) {
-      return currentAppColorScheme;
-    } else {
-     return _loadAppColorScheme();
-    }
-  }
-
   AppColorScheme _loadAppColorScheme() {
     String currentAppColorSchemeName = _sharedPreferences.getString('currentAppColorScheme');
     if (currentAppColorSchemeName != null) {
       return getAppColorSchemeByName(currentAppColorSchemeName);
     } else {
-      currentAppColorScheme = AppColorScheme.standard;
-      return AppColorScheme.standard;
+      return AppColorScheme.teal;
+    }
+  }
+
+  AppColorScheme get currentColorScheme {
+    if (currentAppColorScheme != null) {
+      return currentAppColorScheme;
+    } else {
+      return _loadAppColorScheme();
     }
   }
 

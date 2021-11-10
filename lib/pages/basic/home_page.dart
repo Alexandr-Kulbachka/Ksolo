@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../app/services/tasks_service.dart';
 import '../../components/app_card.dart';
@@ -29,11 +30,9 @@ class _HomeState extends State<Home> {
     return Consumer2<AppColorService, TasksService>(
         builder: (context, appColorService, tasksService, child) {
       return Scaffold(
-        backgroundColor: AppElements.background.color(),
         appBar: AppBar(
           leading: Container(),
-          backgroundColor: AppElements.appbar.color(),
-          title: Text('HOME'),
+          title: Text(AppLocalizations.of(context).main),
           actions: [
             CircledButton(
               size: 45,

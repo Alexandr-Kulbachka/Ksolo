@@ -1,0 +1,50 @@
+{
+    "save": "SAVE",
+    "yes": "YES",
+    "no": "NO",
+    "ok": "OK",
+
+    "authorization": "Authorization",
+    "signIn": "SIGN IN",
+    "inputEmail": "Input email",
+    "inputPassword": "Input password",
+    "rememberMe": "Remember me",
+
+    "registration" : "Create account",
+    "accountCreated": "Account successfully created!",
+    "confirmPassword": "Confirm password",
+
+    "main": "MAIN",
+    "mainSmall": "Main",
+    "settings": "SETTINGS",
+    "settingsSmall": "Settings",
+
+    "accountSettings": "Account Settings",
+    "accountInfo": "Account info",
+    "email": "Email",
+    "invalidEmail": "Invalid email",
+    "switchToEditAccountInfoMode": "Please switch to edit mode to change your email or password",
+    "password": "Password",
+    "invalidPassword": "Invalid password",
+    "newPassword": "New password",
+    "passwordRequirements": "Password Requirements:",
+    "uppercaseLetter": "Uppercase letter(s)",
+    "lowercaseLetter": "Lowercase letter(s)",
+    "numericCharacter": "Numeric character(s)",
+    "specialCharacter": "Special character(s)",
+    "longerThan": "Longer than 8 characters",
+    "changeEmailQuestion": "Are you sure you want to change your email address?",
+    "changePasswordQuestion": "Are you sure you want to change your password?",
+    "emailSuccessfullyChanged": "Email changed successfully!",
+    "passwordSuccessfullyChanged": "Password changed successfully!",
+
+    "appearance": "Appearance",
+    "teal": "Teal mode",
+    "purple": "Purple mode",
+
+    "language": "Language",
+    "appLanguageTitle": "App Language",
+
+    "logout": "Logout",
+    "logoutQuestion": "Are you sure you want to log out of your account?"
+}

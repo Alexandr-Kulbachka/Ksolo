@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../models/task_model.dart';
 import '../../app/services/tasks_service.dart';
@@ -137,7 +138,7 @@ class _NewTaskState extends State<NewTask> {
                 alignment: Alignment.bottomCenter,
                 child: AppButton(
                     margin: EdgeInsets.only(bottom: 10),
-                    text: 'SAVE',
+                    text: AppLocalizations.of(context).save,
                     textSize: 20,
                     textColor: AppElements.basicText.color(),
                     buttonColor: canSave

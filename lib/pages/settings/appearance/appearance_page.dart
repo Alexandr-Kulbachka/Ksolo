@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../app/services/app_color_service.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_card.dart';
 import '../../../style/app_color_scheme.dart';
-
 
 class Appearance extends StatefulWidget {
   Appearance({Key key}) : super(key: key);
@@ -16,32 +16,26 @@ class Appearance extends StatefulWidget {
 }
 
 class _AppearanceState extends State<Appearance> {
-  AppColorScheme selectedScheme;
+  AppColorScheme _selectedScheme;
   AppColorService appColorService;
 
   @override
   void initState() {
     appColorService = Provider.of<AppColorService>(context, listen: false);
-    selectedScheme = appColorService.currentColorScheme;
+    _selectedScheme = appColorService.currentColorScheme;
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          AppElements.background.color(colorScheme: selectedScheme),
+      backgroundColor: AppElements.background.color(colorScheme: _selectedScheme),
       appBar: AppBar(
-        backgroundColor: AppElements.appbar.color(colorScheme: selectedScheme),
+        backgroundColor: AppElements.appbar.color(colorScheme: _selectedScheme),
+        brightness: getCurrentAppBarBrightness(colorScheme: _selectedScheme),
         title: Text(
-          'Appearance',
-          style: TextStyle(
-              color: AppElements.basicText.color(colorScheme: selectedScheme)),
+          AppLocalizations.of(context).appearance,
+          style: TextStyle(color: AppElements.basicText.color(colorScheme: _selectedScheme)),
         ),
       ),
       body: Stack(
@@ -56,12 +50,11 @@ class _AppearanceState extends State<Appearance> {
                         margin: EdgeInsets.all(15),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                                width: 2, color: selectedScheme.mainColor)),
+                            border: Border.all(width: 2, color: _selectedScheme.mainColor)),
                         child: Container(
                           height: 30,
                           width: 30,
-                          child: AppColorScheme.values[index] == selectedScheme
+                          child: AppColorScheme.values[index] == _selectedScheme
                               ? Icon(
                                   Icons.done_outline,
                                   color: Colors.green,
@@ -70,20 +63,18 @@ class _AppearanceState extends State<Appearance> {
                         ),
                       ),
                       Text(
-                        AppColorScheme.values[index].name,
+                        AppColorScheme.values[index].nameLabel(context),
                         style: TextStyle(
-                          color: AppElements.basicText
-                              .color(colorScheme: selectedScheme),
+                          color: AppElements.basicText.color(colorScheme: _selectedScheme),
                           fontSize: 20,
                         ),
                       )
                     ],
                   ),
-                  color:
-                      AppElements.simpleCard.color(colorScheme: selectedScheme),
+                  color: AppElements.simpleCard.color(colorScheme: _selectedScheme),
                 ),
                 onTap: () => setState(() {
-                  selectedScheme = AppColorScheme.values[index];
+                  _selectedScheme = AppColorScheme.values[index];
                 }),
               );
             },
@@ -94,16 +85,15 @@ class _AppearanceState extends State<Appearance> {
             alignment: Alignment.bottomCenter,
             child: AppButton(
               margin: EdgeInsets.only(bottom: 10),
-              text: 'SAVE',
+              text: AppLocalizations.of(context).save,
               textSize: 20,
-              textColor:
-                  AppElements.basicText.color(colorScheme: selectedScheme),
-              buttonColor:
-                  AppElements.enabledButton.color(colorScheme: selectedScheme),
-              onPressed: () => setState(() {
-                appColorService.currentColorScheme = selectedScheme;
-                Navigator.pop(context);
-              }),
+              buttonColor: AppElements.enabledButton.color(colorScheme: _selectedScheme),
+              onPressed: _selectedScheme != appColorService.currentColorScheme
+                  ? () => setState(() {
+                        appColorService.currentColorScheme = _selectedScheme;
+                        Navigator.pop(context);
+                      })
+                  : null,
             ),
           ))
         ],
