@@ -46,15 +46,8 @@ class _InitAppState extends State<InitApp> {
                       AppColorService.currentAppColorScheme != null) {
                     var accountService = Provider.of<AccountService>(context);
                     if (accountService != null &&
-                        accountService.isRememberMe != null &&
                         localeService.currentLocale != null) {
-                      if (accountService.isRememberMe) {
-                        _callSignInAutomatically(context, accountService);
-                      } else {
-                        SchedulerBinding.instance.addPostFrameCallback((_) {
-                          Navigator.of(context).pushReplacementNamed('/start');
-                        });
-                      }
+                      _callSignInAutomatically(context, accountService);
                     }
                   }
                   return KsoloLoading();

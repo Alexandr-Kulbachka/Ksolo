@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -80,43 +82,49 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
+    var bodyHeight = MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + kToolbarHeight);
+    var height = max(bodyHeight, 550.0);
     return Consumer2<AppColorService, AccountService>(builder: (context, appColorService, accountService, child) {
       return Scaffold(
           appBar: AppBar(
             title: Text(AppLocalizations.of(context).registration),
           ),
           body: GestureDetector(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                ListView(
-                  children: [_fields(), _passwordRequirements()],
+            child: SingleChildScrollView(
+              child: Container(
+                height: height,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    _fields(),
+                    _passwordRequirements(),
+                    Spacer(),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: AppButton(
+                          margin: EdgeInsets.only(bottom: 10),
+                          padding: EdgeInsets.all(10),
+                          text: AppLocalizations.of(context).save,
+                          textSize: 20,
+                          height: 70,
+                          width: 150,
+                          onPressed: _canSave
+                              ? () async {
+                                  var result = await accountService.signInWithEmailAndPassword(
+                                      email: _emailController.text, password: _passwordController.text);
+                                  fbAuthSuccessErrorMessage(
+                                      result: result,
+                                      context: context,
+                                      successText: AppLocalizations.of(context).accountCreated,
+                                      onPopAction: (BuildContext context) {
+                                        Navigator.of(context).pushReplacementNamed('/main');
+                                      });
+                                }
+                              : null),
+                    )
+                  ],
                 ),
-                Positioned(
-                    child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AppButton(
-                      margin: EdgeInsets.only(bottom: 10),
-                      padding: EdgeInsets.all(10),
-                      text: AppLocalizations.of(context).save,
-                      textSize: 20,
-                      height: 70,
-                      width: 150,
-                      onPressed: _canSave
-                          ? () async {
-                              var result = await accountService.signInWithEmailAndPassword(
-                                  email: _emailController.text, password: _passwordController.text);
-                              fbAuthSuccessErrorMessage(
-                                  result: result,
-                                  context: context,
-                                  successText: AppLocalizations.of(context).accountCreated,
-                                  onPopAction: (BuildContext context) {
-                                    Navigator.of(context).pushReplacementNamed('/main');
-                                  });
-                            }
-                          : null),
-                ))
-              ],
+              ),
             ),
             onTap: () {
               FocusScopeNode currentFocus = FocusScope.of(context);
@@ -249,7 +257,6 @@ class _RegistrationState extends State<Registration> {
 
   Widget _passwordRequirements() {
     return Container(
-      margin: EdgeInsets.only(bottom: 75),
       child: Column(children: [
         Container(
           margin: EdgeInsets.only(bottom: 10),

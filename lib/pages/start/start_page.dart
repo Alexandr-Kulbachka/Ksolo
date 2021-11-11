@@ -27,6 +27,7 @@ class _StartState extends State<Start> {
           onWillPop: () async => false,
           child: Scaffold(
               appBar: AppBar(
+                leading: Container(),
                 centerTitle: true,
                 title: Text(
                   'Ksolo',

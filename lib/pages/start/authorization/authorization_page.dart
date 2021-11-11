@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -19,6 +22,8 @@ class Authorization extends StatefulWidget {
 }
 
 class _AuthorizationState extends State<Authorization> {
+  AccountService _accountService;
+
   TextEditingController _emailController;
   TextEditingController _passwordController;
 
@@ -39,6 +44,19 @@ class _AuthorizationState extends State<Authorization> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
 
+    _accountService = Provider.of<AccountService>(context, listen: false);
+    if (_accountService.isRememberMe && _accountService.savedLogin != null) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (_emailRegExp.hasMatch(_accountService.savedLogin)) {
+          setState(() {
+            _isEmailValid = true;
+            _emailController.text = _accountService.savedLogin;
+            checkFields();
+          });
+        }
+      });
+    }
+
     _emailFocusNode = FocusNode();
     _emailFocusNode.addListener(() {
       setState(() {});
@@ -51,43 +69,51 @@ class _AuthorizationState extends State<Authorization> {
 
   @override
   Widget build(BuildContext context) {
+    var bodyHeight = MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + kToolbarHeight);
+    var height = max(bodyHeight, 300.0);
     return Consumer2<AppColorService, AccountService>(builder: (context, appColorService, accountService, child) {
       return Scaffold(
-          appBar: AppBar(
-            title: Text(AppLocalizations.of(context).authorization),
-          ),
-          body: GestureDetector(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                ListView(
-                  children: [_fields(accountService)],
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context).authorization),
+        ),
+        body: SafeArea(
+          bottom: false,
+          child: GestureDetector(
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    _fields(accountService),
+                    Spacer(),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: AppButton(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          padding: EdgeInsets.all(10),
+                          text: AppLocalizations.of(context).signIn,
+                          textSize: 20,
+                          height: 70,
+                          width: 150,
+                          onPressed: _allFieldsFilled
+                              ? () async {
+                                  var result = await accountService.signInWithEmailAndPassword(
+                                      email: _emailController.text, password: _passwordController.text);
+                                  fbAuthSuccessErrorMessage(
+                                      result: result,
+                                      context: context,
+                                      successAction: () {
+                                        Navigator.of(context).pushReplacementNamed('/main');
+                                      },
+                                      errorAction: () => _handleErrors(result.code));
+                                }
+                              : null),
+                    ),
+                  ],
                 ),
-                Positioned(
-                    child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AppButton(
-                      margin: EdgeInsets.only(bottom: 10),
-                      padding: EdgeInsets.all(10),
-                      text: AppLocalizations.of(context).signIn,
-                      textSize: 20,
-                      height: 70,
-                      width: 150,
-                      onPressed: _allFieldsFilled
-                          ? () async {
-                              var result = await accountService.signInWithEmailAndPassword(
-                                  email: _emailController.text, password: _passwordController.text);
-                              fbAuthSuccessErrorMessage(
-                                  result: result,
-                                  context: context,
-                                  successAction: () {
-                                    Navigator.of(context).pushReplacementNamed('/main');
-                                  },
-                                  errorAction: () => _handleErrors(result.code));
-                            }
-                          : null),
-                ))
-              ],
+              ),
             ),
             onTap: () {
               FocusScopeNode currentFocus = FocusScope.of(context);
@@ -95,7 +121,9 @@ class _AuthorizationState extends State<Authorization> {
                 currentFocus.unfocus();
               }
             },
-          ));
+          ),
+        ),
+      );
     });
   }
 
@@ -116,8 +144,7 @@ class _AuthorizationState extends State<Authorization> {
 
   Widget _fields(AccountService accountService) {
     return Container(
-      margin: EdgeInsets.only(bottom: 80),
-      child: Column(children: [
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
         AppTextField(
           padding: EdgeInsets.all(10),
           fieldController: _emailController,
