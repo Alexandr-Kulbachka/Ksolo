@@ -45,8 +45,7 @@ class _InitAppState extends State<InitApp> {
                   if (snapshot.connectionState == ConnectionState.done &&
                       AppColorService.currentAppColorScheme != null) {
                     var accountService = Provider.of<AccountService>(context);
-                    if (accountService != null &&
-                        localeService.currentLocale != null) {
+                    if (accountService != null && localeService.currentLocale != null) {
                       _callSignInAutomatically(context, accountService);
                     }
                   }
@@ -73,14 +72,10 @@ class _InitAppState extends State<InitApp> {
 
   void _callSignInAutomatically(BuildContext context, AccountService accountService) async {
     var result = await accountService.signInAutomatically();
-    fbAuthSuccessErrorMessage(
-        result: result,
-        context: context,
-        successAction: () {
-          Navigator.of(context).pushReplacementNamed('/main');
-        },
-        errorAction: () {
-          Navigator.of(context).pushReplacementNamed('/start');
-        });
+    if (result is bool && result) {
+      Navigator.of(context).pushReplacementNamed('/main');
+    } else {
+      Navigator.of(context).pushReplacementNamed('/start');
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -92,6 +93,8 @@ class _AccountInfoState extends State<AccountInfo> {
 
   @override
   Widget build(BuildContext context) {
+    var bodyHeight = MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + kToolbarHeight);
+    var height = max(bodyHeight, 550.0);
     return Consumer<AccountService>(builder: (context, accountService, child) {
       return Scaffold(
           appBar: AppBar(
@@ -110,29 +113,34 @@ class _AccountInfoState extends State<AccountInfo> {
             ],
           ),
           body: GestureDetector(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                ListView(
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _fields(),
-                    if (widget.editMode && _isNewPasswordShouldBeeVisible) _passwordRequirements(),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _fields(),
+                        if (widget.editMode && _isNewPasswordShouldBeeVisible) _passwordRequirements(),
+                      ],
+                    ),
+                    if (widget.editMode)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: AppButton(
+                            margin: EdgeInsets.only(bottom: 10),
+                            padding: EdgeInsets.all(10),
+                            text: AppLocalizations.of(context).save,
+                            textSize: 20,
+                            height: 70,
+                            width: 150,
+                            onPressed: _canSave ? () => _saveChanges() : null),
+                      )
                   ],
                 ),
-                if (widget.editMode)
-                  Positioned(
-                      child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: AppButton(
-                        margin: EdgeInsets.only(bottom: 10),
-                        padding: EdgeInsets.all(10),
-                        text: AppLocalizations.of(context).save,
-                        textSize: 20,
-                        height: 70,
-                        width: 150,
-                        onPressed: _canSave ? () => _saveChanges() : null),
-                  ))
-              ],
+              ),
             ),
             onTap: () {
               FocusScopeNode currentFocus = FocusScope.of(context);
@@ -276,7 +284,7 @@ class _AccountInfoState extends State<AccountInfo> {
 
   Widget _passwordRequirements() {
     return Container(
-      margin: EdgeInsets.only(bottom: 75),
+      margin: EdgeInsets.only(bottom: 5),
       child: Column(children: [
         Container(
           margin: EdgeInsets.only(bottom: 10),
