@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,7 +9,7 @@ import 'components/right_button_background.dart';
 import 'components/left_button_background.dart';
 
 class Start extends StatefulWidget {
-  Start({Key key}) : super(key: key);
+  Start({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _StartState();
@@ -31,7 +30,7 @@ class _StartState extends State<Start> {
                 centerTitle: true,
                 title: Text(
                   'Ksolo',
-                  style: TextStyle(color: AppElements.basicText.color()),
+                  style: TextStyle(color: AppElements.appbarText.color()),
                 ),
               ),
               body: Stack(children: [
@@ -44,7 +43,7 @@ class _StartState extends State<Start> {
                       child: Padding(
                         padding: EdgeInsets.only(top: height * 0.2, left: width * 0.05),
                         child: Text(
-                          AppLocalizations.of(context).registration,
+                          AppLocalizations.of(context)!.registration,
                           style: TextStyle(
                               fontSize: 25, fontWeight: FontWeight.bold, color: AppElements.basicText.color()),
                         ),
@@ -64,7 +63,7 @@ class _StartState extends State<Start> {
                       child: Padding(
                         padding: EdgeInsets.only(top: height * 0.65, left: width * 0.6),
                         child: Text(
-                          AppLocalizations.of(context).signIn,
+                          AppLocalizations.of(context)!.signIn,
                           style: TextStyle(
                               fontSize: 25, fontWeight: FontWeight.bold, color: AppElements.basicText.color()),
                         ),

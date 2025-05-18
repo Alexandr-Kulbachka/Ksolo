@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -9,20 +8,20 @@ import '../../../components/app_card.dart';
 import '../../../style/app_color_scheme.dart';
 
 class Appearance extends StatefulWidget {
-  Appearance({Key key}) : super(key: key);
+  Appearance({Key? key}) : super(key: key);
 
   @override
   _AppearanceState createState() => _AppearanceState();
 }
 
 class _AppearanceState extends State<Appearance> {
-  AppColorScheme _selectedScheme;
-  AppColorService appColorService;
+  late AppColorScheme _selectedScheme;
+  late AppColorService appColorService;
 
   @override
   void initState() {
     appColorService = Provider.of<AppColorService>(context, listen: false);
-    _selectedScheme = appColorService.currentColorScheme;
+    _selectedScheme = appColorService.currentAppColorScheme;
     super.initState();
   }
 
@@ -32,9 +31,9 @@ class _AppearanceState extends State<Appearance> {
       backgroundColor: AppElements.background.color(colorScheme: _selectedScheme),
       appBar: AppBar(
         backgroundColor: AppElements.appbar.color(colorScheme: _selectedScheme),
-        brightness: getCurrentAppBarBrightness(colorScheme: _selectedScheme),
+        //brightness: getCurrentAppBarBrightness(colorScheme: _selectedScheme),
         title: Text(
-          AppLocalizations.of(context).appearance,
+          AppLocalizations.of(context)!.appearance,
           style: TextStyle(color: AppElements.basicText.color(colorScheme: _selectedScheme)),
         ),
       ),
@@ -47,7 +46,7 @@ class _AppearanceState extends State<Appearance> {
                   Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.all(15),
+                        margin: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
                             border: Border.all(width: 2, color: _selectedScheme.mainColor)),
@@ -55,7 +54,7 @@ class _AppearanceState extends State<Appearance> {
                           height: 30,
                           width: 30,
                           child: AppColorScheme.values[index] == _selectedScheme
-                              ? Icon(
+                              ? const Icon(
                                   Icons.done_outline,
                                   color: Colors.green,
                                 )
@@ -63,7 +62,7 @@ class _AppearanceState extends State<Appearance> {
                         ),
                       ),
                       Text(
-                        AppColorScheme.values[index].nameLabel(context),
+                        AppColorScheme.values[index].nameLabel(context) ?? '',
                         style: TextStyle(
                           color: AppElements.basicText.color(colorScheme: _selectedScheme),
                           fontSize: 20,
@@ -84,13 +83,13 @@ class _AppearanceState extends State<Appearance> {
               child: Align(
             alignment: Alignment.bottomCenter,
             child: AppButton(
-              margin: EdgeInsets.only(bottom: 10),
-              text: AppLocalizations.of(context).save,
+              margin: const EdgeInsets.only(bottom: 10),
+              text: AppLocalizations.of(context)!.save,
               textSize: 20,
               buttonColor: AppElements.enabledButton.color(colorScheme: _selectedScheme),
-              onPressed: _selectedScheme != appColorService.currentColorScheme
+              onPressed: _selectedScheme != appColorService.currentAppColorScheme
                   ? () => setState(() {
-                        appColorService.currentColorScheme = _selectedScheme;
+                        appColorService.currentAppColorScheme = _selectedScheme;
                         Navigator.pop(context);
                       })
                   : null,

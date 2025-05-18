@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,17 +10,17 @@ import '../../components/app_button.dart';
 import '../../style/app_color_scheme.dart';
 
 class NewTask extends StatefulWidget {
-  NewTask({Key key}) : super(key: key);
+  NewTask({Key? key}) : super(key: key);
 
   @override
   _NewTaskState createState() => _NewTaskState();
 }
 
 class _NewTaskState extends State<NewTask> {
-  TextEditingController taskNameController;
-  TextEditingController taskDescriptionController;
-  FocusNode taskNameFocusNode;
-  FocusNode taskDescriptionFocusNode;
+  TextEditingController taskNameController = TextEditingController();
+  TextEditingController taskDescriptionController = TextEditingController();
+  FocusNode taskNameFocusNode = FocusNode();
+  FocusNode taskDescriptionFocusNode = FocusNode();
 
   bool isNameValid = true;
   RegExp regExp = new RegExp(
@@ -31,15 +30,15 @@ class _NewTaskState extends State<NewTask> {
 
   @override
   void initState() {
-    taskNameController = TextEditingController();
-    taskDescriptionController = TextEditingController();
+    // taskNameController = TextEditingController();
+    // taskDescriptionController = TextEditingController();
 
-    taskNameFocusNode = FocusNode();
+    //taskNameFocusNode = FocusNode();
     taskNameFocusNode.addListener(() {
       setState(() {});
     });
 
-    taskDescriptionFocusNode = FocusNode();
+    //taskDescriptionFocusNode = FocusNode();
     taskDescriptionFocusNode.addListener(() {
       setState(() {});
     });
@@ -74,29 +73,23 @@ class _NewTaskState extends State<NewTask> {
             children: [
               SingleChildScrollView(
                 child: Container(
-                  margin:
-                      EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 60),
+                  margin: const EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 60),
                   decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                              color: AppColorService
-                                  .currentAppColorScheme.mainColor))),
+                      border: Border(bottom: BorderSide(color: AppColorService.currentColorScheme.mainColor))),
                   child: Column(
                     children: [
                       AppTextField(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         fieldController: taskNameController,
                         fieldFocusNode: taskNameFocusNode,
                         cursorColor: AppElements.textFieldEnabled.color(),
                         labelText: "Task name",
-                        labelColor: taskNameFocusNode.hasFocus ||
-                                taskNameController.text.length > 0
+                        labelColor: taskNameFocusNode.hasFocus || taskNameController.text.isNotEmpty
                             ? AppElements.textFieldEnabled.color()
                             : AppElements.textFieldDisabled.color(),
                         errorText: isNameValid ? null : "Invalid name",
-                        enabledBorderColor:
-                            AppElements.textFieldEnabled.color(),
-                        disabledBorderColor: taskNameController.text.length > 0
+                        enabledBorderColor: AppElements.textFieldEnabled.color(),
+                        disabledBorderColor: taskNameController.text.isNotEmpty
                             ? AppElements.textFieldEnabled.color()
                             : AppElements.textFieldDisabled.color(),
                         onChanged: (value) {
@@ -111,23 +104,19 @@ class _NewTaskState extends State<NewTask> {
                         },
                       ),
                       AppTextField(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         fieldController: taskDescriptionController,
                         fieldFocusNode: taskDescriptionFocusNode,
                         maxLines: null,
-                        cursorColor:
-                            AppColorService.currentAppColorScheme.mainColor,
+                        cursorColor: AppColorService.currentColorScheme.mainColor,
                         labelText: "Task description",
-                        labelColor: taskDescriptionFocusNode.hasFocus ||
-                                taskDescriptionController.text.length > 0
+                        labelColor: taskDescriptionFocusNode.hasFocus || taskDescriptionController.text.isNotEmpty
                             ? AppElements.textFieldEnabled.color()
                             : AppElements.textFieldDisabled.color(),
-                        enabledBorderColor:
-                            AppElements.textFieldEnabled.color(),
-                        disabledBorderColor:
-                            taskDescriptionController.text.length > 0
-                                ? AppElements.textFieldEnabled.color()
-                                : AppElements.textFieldDisabled.color(),
+                        enabledBorderColor: AppElements.textFieldEnabled.color(),
+                        disabledBorderColor: taskDescriptionController.text.isNotEmpty
+                            ? AppElements.textFieldEnabled.color()
+                            : AppElements.textFieldDisabled.color(),
                       ),
                     ],
                   ),
@@ -137,19 +126,15 @@ class _NewTaskState extends State<NewTask> {
                   child: Align(
                 alignment: Alignment.bottomCenter,
                 child: AppButton(
-                    margin: EdgeInsets.only(bottom: 10),
-                    text: AppLocalizations.of(context).save,
+                    margin: const EdgeInsets.only(bottom: 10),
+                    text: AppLocalizations.of(context)!.save,
                     textSize: 20,
                     textColor: AppElements.basicText.color(),
-                    buttonColor: canSave
-                        ? AppElements.enabledButton.color()
-                        : AppElements.disabledButton.color(),
+                    buttonColor: canSave ? AppElements.enabledButton.color() : AppElements.disabledButton.color(),
                     onPressed: () {
                       if (canSave) {
                         setState(() {
-                          tasksService.addTask(TaskModel(
-                              taskNameController.text,
-                              taskDescriptionController.text));
+                          tasksService.addTask(TaskModel(taskNameController.text, taskDescriptionController.text));
                           Navigator.pop(context);
                         });
                       }

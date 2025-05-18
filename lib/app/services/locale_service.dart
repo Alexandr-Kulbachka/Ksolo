@@ -1,42 +1,44 @@
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../l10n/all_locales.dart';
 
 class LocaleService extends ChangeNotifier {
-  static Locale _currentLocale;
-  SharedPreferences _sharedPreferences;
+  // Future<bool> _loaded = false as Future<bool>;
+  //
+  // Future<bool> get loaded => _loaded;
 
-  LocaleService() {
-    _initLocale();
+  late FlutterSecureStorage _secureStorage;
+
+  static Locale currentLocale = AppLocales.getLocale('en');
+
+  // LocaleService() {
+  //   _initLocale();
+  // }
+
+  Future<bool> initLocale() async {
+    _secureStorage = const FlutterSecureStorage();
+    currentLocale = (await _loadLocale())!;
+    //notifyListeners();
+    return Future.value(true);
   }
 
-  void _initLocale() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    currentLocale = _loadLocale();
-    notifyListeners();
+  Future<Locale?> _loadLocale() async {
+    Locale? result;
+    String? currentLocaleName = await _secureStorage.read(key: 'currentLocale');
+
+    result = currentLocaleName != null && currentLocaleName.isNotEmpty
+        ? AppLocales.getLocale(currentLocaleName)
+        : AppLocales.getLocale('en');
+
+    //_loaded = true as Future<bool>;
+    return result;
   }
 
-  Locale _loadLocale() {
-    String currentLocaleName = _sharedPreferences.getString('currentLocale');
-    if (currentLocaleName != null && currentLocaleName.isNotEmpty) {
-      return AllLocales.all[currentLocaleName];
-    } else {
-      return AllLocales.all['en'];
-    }
-  }
+  Locale get currentAppLocale => currentLocale;
 
-  Locale get currentLocale {
-    if (_currentLocale != null) {
-      return _currentLocale;
-    } else if (_sharedPreferences != null) {
-      return _loadLocale();
-    }
-    return null;
-  }
-
-  set currentLocale(Locale locale) {
-    _sharedPreferences.setString('currentLocale', locale.languageCode);
-    _currentLocale = locale;
+  set currentAppLocale(Locale locale) {
+    _secureStorage.write(key: 'currentLocale', value: locale.languageCode);
+    currentLocale = locale;
     notifyListeners();
   }
 }

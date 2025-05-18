@@ -1,41 +1,41 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CircledButton extends StatelessWidget {
   final double size;
-  final EdgeInsets margin;
+  final EdgeInsets? margin;
   final IconData icon;
-  final Color buttonColor;
-  final Color iconColor;
-  final void Function() onPressed;
+  final Color? buttonColor;
+  final Color? iconColor;
+  final void Function()? onPressed;
 
-  CircledButton({
+  const CircledButton({
+    super.key,
     this.size = 10,
     this.margin,
     this.buttonColor,
     this.iconColor,
-    @required this.icon,
-    @required this.onPressed,
+    required this.icon,
+    this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: margin ?? EdgeInsets.all(0),
+      margin: margin ?? const EdgeInsets.all(0),
       child: RawMaterialButton(
         elevation: 0.0,
-        child: Icon(
-          icon,
-          color: iconColor,
-          size: size * 0.75,
-        ),
         onPressed: onPressed,
         constraints: BoxConstraints.tightFor(
           width: size,
           height: size,
         ),
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         fillColor: buttonColor,
+        child: Icon(
+          icon,
+          color: iconColor,
+          size: size * 0.75,
+        ),
       ),
     );
   }

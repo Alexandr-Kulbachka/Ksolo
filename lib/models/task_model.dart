@@ -1,14 +1,14 @@
 import '../models/task_item_model.dart';
 
 class TaskModel {
-  String _title;
-  String _description;
-  List<TaskItemModel> _items;
+  late String _title;
+  late String _description;
+  late List<TaskItemModel> _items;
 
   TaskModel(title, description, {items}) {
-    this._title = title;
-    this._description = description;
-    this._items = items ?? List<TaskItemModel>();
+    _title = title;
+    _description = description;
+    _items = items ?? <TaskItemModel>{};
   }
 
   String get title => _title;
@@ -31,13 +31,12 @@ class TaskModel {
 
   void deleteItemByValue(TaskItemModel item) => _items.remove(item);
 
-  void updateItem(int index, {String title, String description, bool isDone}) {
-    _items[index]
-        .update(title: title, description: description, isDone: isDone);
+  void updateItem(int index, {String? title, String? description, bool? done}) {
+    _items[index].update(title: title, description: description, done: done);
   }
 
-  void update({String title, String description}) {
-    this._title = title ?? this._title;
-    this._description = description ?? this._description;
+  void update({String? title, String? description}) {
+    if (title != null) _title = title;
+    if (description != null) _description = description;
   }
 }

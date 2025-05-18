@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../style/app_color_scheme.dart';
 
 class RightButtonBackground extends CustomPainter {
-  var _path = Path();
+  final _path = Path();
 
   @override
   void paint(Canvas canvas, Size size) {

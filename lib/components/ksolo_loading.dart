@@ -1,9 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../style/app_color_scheme.dart';
 
 class KsoloLoading extends StatelessWidget {
+
+  const KsoloLoading({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -17,14 +19,14 @@ class KsoloLoading extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 fontStyle: FontStyle.italic,
                 fontFamily: 'Centaur',
-                fontSize: 70),
+                fontSize: 60),
           ),
           Container(
             height: 50,
             width: 50,
-            margin: EdgeInsets.only(top: 50),
+            margin: const EdgeInsets.only(top: 50),
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(AppElements.appbar.color()),
+              valueColor: AlwaysStoppedAnimation<Color?>(AppElements.appbar.color()),
             ),
           )
         ],

@@ -1,12 +1,12 @@
 class TaskItemModel {
-  String _title;
-  String _description;
-  bool _isDone;
+  late String _title;
+  late String _description;
+  late bool _done;
 
   TaskItemModel(title, description, {isDone = false}) {
-    this._title = title;
-    this._description = description;
-    this._isDone = isDone;
+    _title = title;
+    _description = description;
+    _done = isDone;
   }
 
   String get title => _title;
@@ -19,14 +19,14 @@ class TaskItemModel {
     _description = value;
   }
 
-  bool get isDone => _isDone;
-  set isDone(bool value) {
-    _isDone = value;
+  bool get done => _done;
+  set done(bool value) {
+    _done = value;
   }
 
-  void update({String title, String description, bool isDone}) {
-    this._title = title ?? this._title;
-    this._description = description ?? this._description;
-    this._isDone = isDone ?? this._isDone;
+  void update({String? title, String? description, bool? done}) {
+    _title = title ?? _title;
+    _description = description ?? _description;
+    _done = done ?? _done;
   }
 }

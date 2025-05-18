@@ -1,5 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -12,21 +11,21 @@ import '../../components/fb_auth_success_error_message.dart';
 import '../../style/app_color_scheme.dart';
 
 class InitApp extends StatefulWidget {
-  InitApp({Key key}) : super(key: key);
+  InitApp({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _InitAppState();
 }
 
 class _InitAppState extends State<InitApp> {
-  Future<FirebaseApp> _initialization;
+  //Future<FirebaseApp> _initialization;
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _initialization = Firebase.initializeApp();
-    });
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   _initialization = Firebase.initializeApp();
+    // });
   }
 
   @override
@@ -37,19 +36,24 @@ class _InitAppState extends State<InitApp> {
           child: Scaffold(
               backgroundColor: AppElements.background.color(),
               body: FutureBuilder(
-                future: _initialization,
+                future: Future.wait([appColorService.initSharedPreferences(), localeService.initLocale()]),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return _somethingWentWrong();
-                  }
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      AppColorService.currentAppColorScheme != null) {
-                    var accountService = Provider.of<AccountService>(context);
-                    if (accountService != null && localeService.currentLocale != null) {
-                      _callSignInAutomatically(context, accountService);
+                  } else {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                        break;
+                      case ConnectionState.waiting:
+                        return const KsoloLoading();
+                      case ConnectionState.active:
+                        break;
+                      case ConnectionState.done:
+                        var accountService = Provider.of<AccountService>(context);
+                        _callSignInAutomatically(context, accountService);
                     }
                   }
-                  return KsoloLoading();
+                  return const Text('Some error occurred');
                 },
               )));
     });
@@ -57,7 +61,7 @@ class _InitAppState extends State<InitApp> {
 
   Widget _somethingWentWrong() {
     return Center(
-      child: Container(
+      child: SizedBox(
         width: 300,
         height: 200,
         child: Center(
@@ -71,11 +75,17 @@ class _InitAppState extends State<InitApp> {
   }
 
   void _callSignInAutomatically(BuildContext context, AccountService accountService) async {
-    var result = await accountService.signInAutomatically();
-    if (result is bool && result) {
-      Navigator.of(context).pushReplacementNamed('/main');
-    } else {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      //Navigator.of(context).pushReplacementNamed('/main');
+
       Navigator.of(context).pushReplacementNamed('/start');
-    }
+    });
+
+    // var result = await accountService.signInAutomatically();
+    // if (result is bool && result) {
+    //   Navigator.of(context).pushReplacementNamed('/main');
+    // } else {
+    //   Navigator.of(context).pushReplacementNamed('/start');
+    // }
   }
 }

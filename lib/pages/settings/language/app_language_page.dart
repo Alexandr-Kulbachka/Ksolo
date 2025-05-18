@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ksolo/l10n/all_locales.dart';
 import 'package:provider/provider.dart';
@@ -11,23 +10,23 @@ import '../../../components/app_card.dart';
 import '../../../style/app_color_scheme.dart';
 
 class AppLanguage extends StatefulWidget {
-  AppLanguage({Key key}) : super(key: key);
+  AppLanguage({Key? key}) : super(key: key);
 
   @override
   _AppLanguageState createState() => _AppLanguageState();
 }
 
 class _AppLanguageState extends State<AppLanguage> {
-  Locale _currentLocale;
-  Locale _selectedLocale;
+  late Locale _currentLocale;
+  late Locale _selectedLocale;
 
-  LocaleService _localeService;
+  late LocaleService _localeService;
 
   @override
   void initState() {
     _localeService = Provider.of<LocaleService>(context, listen: false);
-    _currentLocale = _localeService.currentLocale;
-    _selectedLocale = _localeService.currentLocale;
+    _currentLocale = _localeService.currentAppLocale;
+    _selectedLocale = _localeService.currentAppLocale;
     super.initState();
   }
 
@@ -37,7 +36,7 @@ class _AppLanguageState extends State<AppLanguage> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).appLanguageTitle,
+            AppLocalizations.of(context)?.appLanguageTitle ?? '',
           ),
         ),
         body: Stack(
@@ -49,15 +48,15 @@ class _AppLanguageState extends State<AppLanguage> {
                     Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.all(15),
+                          margin: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
-                              border: Border.all(width: 2, color: appColorService.currentColorScheme.mainColor)),
-                          child: Container(
+                              border: Border.all(width: 2, color: appColorService.currentAppColorScheme.mainColor)),
+                          child: SizedBox(
                             height: 30,
                             width: 30,
-                            child: AllLocales.all.values.toList()[index] == _selectedLocale
-                                ? Icon(
+                            child: AppLocales.allLocales.values.toList()[index] == _selectedLocale
+                                ? const Icon(
                                     Icons.done_outline,
                                     color: Colors.green,
                                   )
@@ -65,7 +64,7 @@ class _AppLanguageState extends State<AppLanguage> {
                           ),
                         ),
                         Text(
-                          AllLocales.names[AllLocales.all.keys.toList()[index]],
+                          AppLocales.names[AppLocales.allLocales.keys.toList()[index]]!,
                           style: TextStyle(
                             color: AppElements.basicText.color(),
                             fontSize: 20,
@@ -76,22 +75,22 @@ class _AppLanguageState extends State<AppLanguage> {
                     color: AppElements.simpleCard.color(),
                   ),
                   onTap: () => setState(() {
-                    _selectedLocale = AllLocales.all.values.toList()[index];
+                    _selectedLocale = AppLocales.allLocales.values.toList()[index];
                   }),
                 );
               },
-              itemCount: AllLocales.names.length,
+              itemCount: AppLocales.names.length,
             ),
             Positioned.fill(
                 child: Align(
               alignment: Alignment.bottomCenter,
               child: AppButton(
-                margin: EdgeInsets.only(bottom: 10),
-                text: AppLocalizations.of(context).save,
+                margin: const EdgeInsets.only(bottom: 10),
+                text: AppLocalizations.of(context)!.save,
                 textSize: 20,
                 onPressed: _selectedLocale != _currentLocale
                     ? () => setState(() {
-                          _localeService.currentLocale = _selectedLocale;
+                          _localeService.currentAppLocale = _selectedLocale;
                           Navigator.pop(context);
                         })
                     : null,

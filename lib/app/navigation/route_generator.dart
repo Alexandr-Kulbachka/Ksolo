@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../pages/settings/language/app_language_page.dart';
@@ -16,7 +15,7 @@ import '../../pages/task/task_details_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final Map<String, dynamic> args = settings.arguments;
+    var args = settings.arguments != null ? settings.arguments as Map<String, dynamic> : null;
     var page;
     switch (settings.name) {
       case '/':
@@ -41,9 +40,9 @@ class RouteGenerator {
         page = NewTask();
         break;
       case 'home/task':
-        if (args['index'] != null && args['index'] is int) {
+        if (args?['index'] != null && args?['index'] is int) {
           page = Task(
-            index: args['index'],
+            index: args?['index'],
           );
         }
         break;
@@ -71,9 +70,9 @@ class RouteGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
           appBar: AppBar(
-            title: Text('Error'),
+            title: const Text('Error'),
           ),
-          body: Center(
+          body: const Center(
             child: Text('ERROR!'),
           ));
     });

@@ -10,7 +10,7 @@ import '../style/app_color_scheme.dart';
 import 'basic/home_page.dart';
 
 class MainNavigation extends StatefulWidget {
-  MainNavigation({Key key}) : super(key: key);
+  MainNavigation({Key? key}) : super(key: key);
 
   @override
   _MainNavigationState createState() => _MainNavigationState();
@@ -41,13 +41,13 @@ class _MainNavigationState extends State<MainNavigation> {
                 icon: Icon(
                   Icons.home,
                 ),
-                label: AppLocalizations.of(context).mainSmall,
+                label: AppLocalizations.of(context)?.mainSmall,
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.settings,
                 ),
-                label: AppLocalizations.of(context).settingsSmall,
+                label: AppLocalizations.of(context)?.settingsSmall,
               ),
             ],
             onTap: (index) {

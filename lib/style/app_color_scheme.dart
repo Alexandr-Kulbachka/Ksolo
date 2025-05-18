@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import '../app/services/app_color_service.dart';
 
 enum AppElements {
   appbar,
+  appbarText,
   bottomNavigationBar,
   bottomNavigationBarItem,
   basicText,
@@ -15,11 +15,15 @@ enum AppElements {
   simpleCard,
   enabledButton,
   disabledButton,
+  disabledBorderColor,
   background,
   gradientBackgroundStart,
   gradientBackgroundEnd,
   border,
-  appbarButton
+  appbarButton,
+  cursor,
+  selectionHandle,
+  selection
 }
 
 enum AppColorScheme { teal, purple }
@@ -28,11 +32,11 @@ extension MainColorSchemeInfoExtension on AppColorScheme {
   Color get mainColor {
     switch (this) {
       case AppColorScheme.teal:
-        return Colors.teal[800];
+        return const Color(0xff00685b);
       case AppColorScheme.purple:
-        return Color(0xff502a9e);
+        return const Color(0xff502a9e);
       default:
-        return null;
+        return Colors.white;
     }
   }
 
@@ -43,18 +47,18 @@ extension MainColorSchemeInfoExtension on AppColorScheme {
       case AppColorScheme.purple:
         return 'Purple mode';
       default:
-        return null;
+        return '';
     }
   }
 
-  String nameLabel(BuildContext context) {
+  String? nameLabel(BuildContext context) {
     switch (this) {
       case AppColorScheme.teal:
-        return AppLocalizations.of(context).teal;
+        return AppLocalizations.of(context)?.teal;
       case AppColorScheme.purple:
-        return AppLocalizations.of(context).purple;
+        return AppLocalizations.of(context)?.purple;
       default:
-        return null;
+        return '';
     }
   }
 }
@@ -66,19 +70,20 @@ AppColorScheme getAppColorSchemeByName(String appColorSchemeName) {
     case 'Purple mode':
       return AppColorScheme.purple;
     default:
-      return null;
+      return AppColorScheme.teal;
   }
 }
 
 extension AppElementsExtension on AppElements {
-  Color color({AppColorScheme colorScheme}) {
-    switch (colorScheme ?? AppColorService.currentAppColorScheme) {
+  Color color({AppColorScheme? colorScheme}) {
+    switch (colorScheme ?? AppColorService.currentColorScheme) {
       case AppColorScheme.teal:
         {
           switch (this) {
             case AppElements.background:
-              return Colors.white;
+            case AppElements.appbarText:
             case AppElements.basicText:
+            case AppElements.bottomNavigationBarItem:
               return Colors.white;
             case AppElements.gradientBackgroundStart:
             case AppElements.textOnBackground:
@@ -86,59 +91,65 @@ extension AppElementsExtension on AppElements {
             case AppElements.appbar:
             case AppElements.enabledButton:
             case AppElements.textFieldEnabled:
-              return Colors.teal[800];
-            case AppElements.bottomNavigationBarItem:
-              return Colors.white;
+            case AppElements.cursor:
+            case AppElements.selectionHandle:
+              return const Color(0xff00685b);
             case AppElements.gradientBackgroundEnd:
             case AppElements.appbarButton:
             case AppElements.simpleCard:
-              return Colors.teal[300];
+              return const Color(0xff4cb5ab);
+            case AppElements.selection:
+              return const Color(0xffa7d1cc);
             case AppElements.disabledButton:
+            case AppElements.disabledBorderColor:
             case AppElements.textFieldDisabled:
-              return Colors.grey[400];
+              return const Color(0xffbcbcbc);
             default:
               return AppColorScheme.teal.mainColor;
           }
         }
-        break;
       case AppColorScheme.purple:
         {
           switch (this) {
             case AppElements.background:
-              return Color(0xff21244a);
+              return const Color(0xff21244a);
+            case AppElements.appbarText:
             case AppElements.basicText:
             case AppElements.textOnBackground:
+            case AppElements.textFieldEnabled:
+            case AppElements.bottomNavigationBarItem:
+            case AppElements.cursor:
+            case AppElements.selectionHandle:
               return Colors.white;
             case AppElements.appbarButton:
             case AppElements.gradientBackgroundStart:
-              return Color(0xff21244a);
+              return const Color(0xff21244a);
             case AppElements.disabledButton:
             case AppElements.textFieldDisabled:
-              return Color(0xff502a9e);
+              return const Color(0xff502a9e);
             case AppElements.appbar:
             case AppElements.bottomNavigationBar:
-              return Color(0xff2b2a65);
+              return const Color(0xff2b2a65);
             case AppElements.gradientBackgroundEnd:
-              return Color(0xff623dd5);
+              return const Color(0xff623dd5);
             case AppElements.enabledButton:
             case AppElements.simpleCard:
-              return Color(0xff5f3ed6);
-            case AppElements.textFieldEnabled:
-            case AppElements.bottomNavigationBarItem:
-              return Colors.white;
+            case AppElements.selection:
+              return const Color(0xff5f3ed6);
+            case AppElements.disabledBorderColor:
+              return const Color(0xffbcbcbc);
             default:
               return AppColorScheme.purple.mainColor;
           }
         }
-        break;
       default:
-        return null;
+        return AppColorScheme.purple.mainColor;
     }
   }
 }
 
-Brightness getCurrentAppBarBrightness({AppColorScheme colorScheme}) {
-  switch (colorScheme ?? AppColorService.currentAppColorScheme) {
+Brightness getCurrentAppBarBrightness({AppColorScheme? colorScheme}) {
+  switch (colorScheme ?? AppColorService.currentColorScheme) {
     case AppColorScheme.teal:
     case AppColorScheme.purple:
       return Brightness.dark;

@@ -1,48 +1,45 @@
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../app/services/account_service.dart';
-import '../../../app/firebase/firebase_auth.dart';
 import '../../../app/services/app_color_service.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_field.dart';
 import '../../../components/circled_button.dart';
-import '../../../components/fb_auth_success_error_message.dart';
 import '../../../style/app_color_scheme.dart';
 
 class AccountInfo extends StatefulWidget {
   bool editMode;
-  AccountInfo({Key key, this.editMode = false}) : super(key: key);
+  AccountInfo({Key? key, this.editMode = false}) : super(key: key);
 
   @override
   _AccountInfoState createState() => _AccountInfoState();
 }
 
 class _AccountInfoState extends State<AccountInfo> {
-  FBAuth _fbAuth;
+  //FBAuth _fbAuth;
 
-  String _oldEmail;
+  late String _oldEmail;
 
-  TextEditingController _emailController;
-  TextEditingController _passwordController;
-  TextEditingController _newPasswordController;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
 
-  FocusNode _emailFocusNode;
-  FocusNode _passwordFocusNode;
-  FocusNode _newPasswordFocusNode;
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _newPasswordFocusNode = FocusNode();
 
   bool _isEmailValid = true;
   bool _isPasswordValid = false;
   bool _isNewPasswordValid = false;
 
-  bool _hasUppercase;
-  bool _hasDigits;
-  bool _hasLowercase;
-  bool _hasSpecialCharacters;
-  bool _hasMinLength;
+  bool? _hasUppercase;
+  bool? _hasDigits;
+  bool? _hasLowercase;
+  bool? _hasSpecialCharacters;
+  bool? _hasMinLength;
 
   bool _isPasswordObscured = true;
   bool _isNewPasswordObscured = true;
@@ -50,30 +47,31 @@ class _AccountInfoState extends State<AccountInfo> {
   bool _isEmailShouldBeeEditable = true;
   bool _isNewPasswordShouldBeeVisible = true;
 
-  RegExp _emailRegExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  final RegExp _emailRegExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   bool _canSave = false;
 
   @override
   void initState() {
-    _fbAuth = FBAuth.getInstance();
-    _emailController = TextEditingController();
-    _emailController.text = _fbAuth.currentUser.email;
-    _oldEmail = _fbAuth.currentUser.email;
-    _passwordController = TextEditingController();
-    _newPasswordController = TextEditingController();
+    //_fbAuth = FBAuth.getInstance();
+    //_emailController = TextEditingController();
+    // _emailController.text = _fbAuth.currentUser.email;
+    _oldEmail = '';
+    // _oldEmail = _fbAuth.currentUser.email;
+    // _passwordController = TextEditingController();
+    // _newPasswordController = TextEditingController();
 
-    _emailFocusNode = FocusNode();
+    //_emailFocusNode = FocusNode();
     _emailFocusNode.addListener(() {
       setState(() {});
     });
 
-    _passwordFocusNode = FocusNode();
+    //_passwordFocusNode = FocusNode();
     _passwordFocusNode.addListener(() {
       setState(() {});
     });
 
-    _newPasswordFocusNode = FocusNode();
+    //_newPasswordFocusNode = FocusNode();
     _newPasswordFocusNode.addListener(() {
       setState(() {});
     });
@@ -99,12 +97,12 @@ class _AccountInfoState extends State<AccountInfo> {
       return Scaffold(
           appBar: AppBar(
             title: Text(
-              AppLocalizations.of(context).accountInfo,
+              AppLocalizations.of(context)!.accountInfo,
             ),
             actions: [
               CircledButton(
                   size: 30,
-                  margin: EdgeInsets.symmetric(horizontal: 4),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
                   iconColor: AppElements.basicText.color(),
                   icon: widget.editMode ? Icons.edit_off : Icons.edit,
                   onPressed: () => setState(() {
@@ -130,9 +128,9 @@ class _AccountInfoState extends State<AccountInfo> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: AppButton(
-                            margin: EdgeInsets.only(bottom: 10),
-                            padding: EdgeInsets.all(10),
-                            text: AppLocalizations.of(context).save,
+                            margin: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.all(10),
+                            text: AppLocalizations.of(context)!.save,
                             textSize: 20,
                             height: 70,
                             width: 150,
@@ -156,20 +154,20 @@ class _AccountInfoState extends State<AccountInfo> {
     return Column(children: [
       AppTextField(
         readOnly: !widget.editMode || !_isEmailShouldBeeEditable,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         fieldController: _emailController,
         fieldFocusNode: _emailFocusNode,
         maxLines: 1,
-        cursorColor: AppColorService.currentAppColorScheme.mainColor,
-        labelText: AppLocalizations.of(context).email,
-        labelColor: _emailFocusNode.hasFocus || _emailController.text.length > 0
+        cursorColor: AppColorService.currentColorScheme.mainColor,
+        labelText: AppLocalizations.of(context)!.email,
+        labelColor: _emailFocusNode.hasFocus || _emailController.text.isNotEmpty
             ? AppElements.textFieldEnabled.color()
             : AppElements.textFieldDisabled.color(),
         enabledBorderColor: AppElements.textFieldEnabled.color(),
-        disabledBorderColor: _emailController.text.length > 0
+        disabledBorderColor: _emailController.text.isNotEmpty
             ? AppElements.textFieldEnabled.color()
             : AppElements.textFieldDisabled.color(),
-        errorText: _isEmailValid || _emailController.text.isEmpty ? null : AppLocalizations.of(context).invalidEmail,
+        errorText: _isEmailValid || _emailController.text.isEmpty ? null : AppLocalizations.of(context)!.invalidEmail,
         onChanged: (value) {
           setState(() {
             if (_emailRegExp.hasMatch(value)) {
@@ -184,7 +182,7 @@ class _AccountInfoState extends State<AccountInfo> {
       if (!widget.editMode)
         Center(
           child: Text(
-            AppLocalizations.of(context).switchToEditAccountInfoMode,
+            AppLocalizations.of(context)!.switchToEditAccountInfoMode,
             textAlign: TextAlign.center,
             style: TextStyle(color: AppElements.textOnBackground.color()),
           ),
@@ -198,22 +196,22 @@ class _AccountInfoState extends State<AccountInfo> {
             obscureText: _isPasswordObscured,
             autocorrect: false,
             enableSuggestions: false,
-            padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
             fieldController: _passwordController,
             fieldFocusNode: _passwordFocusNode,
             maxLines: 1,
-            cursorColor: AppColorService.currentAppColorScheme.mainColor,
-            labelText: AppLocalizations.of(context).password,
-            labelColor: _passwordFocusNode.hasFocus || _passwordController.text.length > 0
+            cursorColor: AppColorService.currentColorScheme.mainColor,
+            labelText: AppLocalizations.of(context)!.password,
+            labelColor: _passwordFocusNode.hasFocus || _passwordController.text.isNotEmpty
                 ? AppElements.textFieldEnabled.color()
                 : AppElements.textFieldDisabled.color(),
             enabledBorderColor: AppElements.textFieldEnabled.color(),
-            disabledBorderColor: _passwordController.text.length > 0
+            disabledBorderColor: _passwordController.text.isNotEmpty
                 ? AppElements.textFieldEnabled.color()
                 : AppElements.textFieldDisabled.color(),
             errorText: _passwordController.text.isEmpty || _isPasswordValid
                 ? null
-                : AppLocalizations.of(context).invalidPassword,
+                : AppLocalizations.of(context)!.invalidPassword,
             onChanged: (value) {
               setState(() {
                 _isPasswordValid = _isPasswordCompliant(value);
@@ -224,7 +222,7 @@ class _AccountInfoState extends State<AccountInfo> {
           CircledButton(
               size: 40,
               icon: _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-              iconColor: _passwordFocusNode.hasFocus || _passwordController.text.length > 0
+              iconColor: _passwordFocusNode.hasFocus || _passwordController.text.isNotEmpty
                   ? AppElements.textFieldEnabled.color()
                   : AppElements.textFieldDisabled.color(),
               onPressed: () {
@@ -243,22 +241,22 @@ class _AccountInfoState extends State<AccountInfo> {
               obscureText: _isNewPasswordObscured,
               autocorrect: false,
               enableSuggestions: false,
-              padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
               fieldController: _newPasswordController,
               fieldFocusNode: _newPasswordFocusNode,
               maxLines: 1,
-              cursorColor: AppColorService.currentAppColorScheme.mainColor,
-              labelText: AppLocalizations.of(context).newPassword,
-              labelColor: _newPasswordFocusNode.hasFocus || _newPasswordController.text.length > 0
+              cursorColor: AppColorService.currentColorScheme.mainColor,
+              labelText: AppLocalizations.of(context)!.newPassword,
+              labelColor: _newPasswordFocusNode.hasFocus || _newPasswordController.text.isNotEmpty
                   ? AppElements.textFieldEnabled.color()
                   : AppElements.textFieldDisabled.color(),
               enabledBorderColor: AppElements.textFieldEnabled.color(),
-              disabledBorderColor: _newPasswordController.text.length > 0
+              disabledBorderColor: _newPasswordController.text.isNotEmpty
                   ? AppElements.textFieldEnabled.color()
                   : AppElements.textFieldDisabled.color(),
               errorText: _isNewPasswordValid || _newPasswordController.text.isEmpty
                   ? null
-                  : AppLocalizations.of(context).invalidPassword,
+                  : AppLocalizations.of(context)!.invalidPassword,
               onChanged: (value) {
                 setState(() {
                   _isNewPasswordValid = _isPasswordCompliant(value);
@@ -269,7 +267,7 @@ class _AccountInfoState extends State<AccountInfo> {
             CircledButton(
                 size: 40,
                 icon: _isNewPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                iconColor: _newPasswordFocusNode.hasFocus || _newPasswordController.text.length > 0
+                iconColor: _newPasswordFocusNode.hasFocus || _newPasswordController.text.isNotEmpty
                     ? AppElements.textFieldEnabled.color()
                     : AppElements.textFieldDisabled.color(),
                 onPressed: () {
@@ -284,59 +282,59 @@ class _AccountInfoState extends State<AccountInfo> {
 
   Widget _passwordRequirements() {
     return Container(
-      margin: EdgeInsets.only(bottom: 5),
+      margin: const EdgeInsets.only(bottom: 5),
       child: Column(children: [
         Container(
-          margin: EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 10),
           child: _passwordRequirement(
-              text: AppLocalizations.of(context).passwordRequirements,
+              text: AppLocalizations.of(context)!.passwordRequirements,
               color: _newPasswordController.text.isEmpty ? Colors.grey : AppElements.textFieldEnabled.color(),
               size: 22),
         ),
         _passwordRequirement(
-            text: AppLocalizations.of(context).uppercaseLetter,
+            text: AppLocalizations.of(context)!.uppercaseLetter,
             color: _newPasswordController.text.isEmpty
                 ? Colors.grey
-                : _hasUppercase
+                : _hasUppercase!
                     ? AppElements.textFieldEnabled.color()
                     : Colors.red),
         _passwordRequirement(
-            text: AppLocalizations.of(context).lowercaseLetter,
+            text: AppLocalizations.of(context)!.lowercaseLetter,
             color: _newPasswordController.text.isEmpty
                 ? Colors.grey
-                : _hasLowercase
+                : _hasLowercase!
                     ? AppElements.textFieldEnabled.color()
                     : Colors.red),
         _passwordRequirement(
-            text: AppLocalizations.of(context).numericCharacter,
+            text: AppLocalizations.of(context)!.numericCharacter,
             color: _newPasswordController.text.isEmpty
                 ? Colors.grey
-                : _hasDigits
+                : _hasDigits!
                     ? AppElements.textFieldEnabled.color()
                     : Colors.red),
         _passwordRequirement(
-            text: AppLocalizations.of(context).specialCharacter,
+            text: AppLocalizations.of(context)!.specialCharacter,
             color: _newPasswordController.text.isEmpty
                 ? Colors.grey
-                : _hasSpecialCharacters
+                : _hasSpecialCharacters!
                     ? AppElements.textFieldEnabled.color()
                     : Colors.red),
         _passwordRequirement(
-            text: AppLocalizations.of(context).longerThan,
+            text: AppLocalizations.of(context)!.longerThan,
             color: _newPasswordController.text.isEmpty
                 ? Colors.grey
-                : _hasMinLength
+                : _hasMinLength!
                     ? AppElements.textFieldEnabled.color()
                     : Colors.red),
       ]),
     );
   }
 
-  Widget _passwordRequirement({String text, Color color, double size}) {
+  Widget _passwordRequirement({String? text, Color? color, double? size}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       child: Text(
-        text,
+        text!,
         style: TextStyle(
           color: color,
           fontSize: size ?? 18,
@@ -345,18 +343,18 @@ class _AccountInfoState extends State<AccountInfo> {
     );
   }
 
-  bool _isPasswordCompliant(String password, [int minLength = 8]) {
+  bool _isPasswordCompliant(String? password, [int minLength = 8]) {
     if (password == null || password.isEmpty) {
       return false;
     }
 
-    _hasUppercase = password.contains(new RegExp(r'[A-Z]'));
-    _hasDigits = password.contains(new RegExp(r'[0-9]'));
-    _hasLowercase = password.contains(new RegExp(r'[a-z]'));
-    _hasSpecialCharacters = password.contains(new RegExp(r'[!@#$%^&*(),.?"_:{}|<>+-]'));
+    _hasUppercase = password.contains(RegExp(r'[A-Z]'));
+    _hasDigits = password.contains(RegExp(r'[0-9]'));
+    _hasLowercase = password.contains(RegExp(r'[a-z]'));
+    _hasSpecialCharacters = password.contains(RegExp(r'[!@#$%^&*(),.?"_:{}|<>+-]'));
     _hasMinLength = password.length > minLength;
 
-    return _hasDigits & _hasUppercase & _hasLowercase & _hasSpecialCharacters & _hasMinLength;
+    return _hasDigits! && _hasUppercase! && _hasLowercase! && _hasSpecialCharacters! && _hasMinLength!;
   }
 
   void checkFields() {
@@ -389,9 +387,9 @@ class _AccountInfoState extends State<AccountInfo> {
             backgroundColor: AppElements.appbar.color(),
             title: Text(
               _isEmailShouldBeeEditable
-                  ? AppLocalizations.of(context).changeEmailQuestion
+                  ? AppLocalizations.of(context)!.changeEmailQuestion
                   : _isNewPasswordShouldBeeVisible
-                      ? AppLocalizations.of(context).changePasswordQuestion
+                      ? AppLocalizations.of(context)!.changePasswordQuestion
                       : '',
               style: TextStyle(
                 color: AppElements.basicText.color(),
@@ -399,41 +397,41 @@ class _AccountInfoState extends State<AccountInfo> {
             ),
             actions: [
               AppButton(
-                  text: AppLocalizations.of(context).yes,
+                  text: AppLocalizations.of(context)!.yes,
                   buttonColor: AppElements.simpleCard.color(),
                   textColor: AppElements.basicText.color(),
                   onPressed: () async {
                     if (_isEmailShouldBeeEditable) {
-                      await _fbAuth
-                          .changeEmail(_oldEmail, _passwordController.text, _emailController.text)
-                          .then((result) {
-                        Navigator.of(context).pop();
-                        fbAuthSuccessErrorMessage(
-                            result: result,
-                            context: context,
-                            successText: AppLocalizations.of(context).emailSuccessfullyChanged,
-                            successAction: () {
-                              _oldEmail = _emailController.text;
-                              _switchEditMode();
-                            });
-                      });
+                      // await _fbAuth
+                      //     .changeEmail(_oldEmail, _passwordController.text, _emailController.text)
+                      //     .then((result) {
+                      //   Navigator.of(context).pop();
+                      //   fbAuthSuccessErrorMessage(
+                      //       result: result,
+                      //       context: context,
+                      //       successText: AppLocalizations.of(context).emailSuccessfullyChanged,
+                      //       successAction: () {
+                      //         _oldEmail = _emailController.text;
+                      //         _switchEditMode();
+                      //       });
+                      // });
                     } else if (_isNewPasswordShouldBeeVisible) {
-                      await _fbAuth
-                          .changePassword(_oldEmail, _passwordController.text, _newPasswordController.text)
-                          .then((result) {
-                        Navigator.of(context).pop();
-                        fbAuthSuccessErrorMessage(
-                            result: result,
-                            context: context,
-                            successText: AppLocalizations.of(context).passwordSuccessfullyChanged,
-                            successAction: () {
-                              _switchEditMode();
-                            });
-                      });
+                      // await _fbAuth
+                      //     .changePassword(_oldEmail, _passwordController.text, _newPasswordController.text)
+                      //     .then((result) {
+                      //   Navigator.of(context).pop();
+                      //   fbAuthSuccessErrorMessage(
+                      //       result: result,
+                      //       context: context,
+                      //       successText: AppLocalizations.of(context).passwordSuccessfullyChanged,
+                      //       successAction: () {
+                      //         _switchEditMode();
+                      //       });
+                      // });
                     }
                   }),
               AppButton(
-                  text: AppLocalizations.of(context).no,
+                  text: AppLocalizations.of(context)!.no,
                   buttonColor: AppElements.simpleCard.color(),
                   textColor: AppElements.basicText.color(),
                   onPressed: () => Navigator.of(context).pop())

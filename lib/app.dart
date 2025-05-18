@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -28,10 +27,14 @@ class MyApp extends StatelessWidget {
               bottomNavigationBarTheme:
                   BottomNavigationBarThemeData(backgroundColor: AppElements.bottomNavigationBar.color()),
               scaffoldBackgroundColor: AppElements.background.color(),
-              primarySwatch: Colors.blue,
+              textSelectionTheme: TextSelectionThemeData(
+                cursorColor: AppElements.cursor.color(),
+                selectionHandleColor: AppElements.selectionHandle.color(),
+                selectionColor: AppElements.selection.color(),
+              ),
               visualDensity: VisualDensity.adaptivePlatformDensity,
-              appBarTheme:
-                  AppBarTheme(backgroundColor: AppElements.appbar.color(), brightness: getCurrentAppBarBrightness()),
+              appBarTheme: AppBarTheme(backgroundColor: AppElements.appbar.color()),
+              //, brightness: getCurrentAppBarBrightness()),
               textButtonTheme: TextButtonThemeData(
                   style: TextButton.styleFrom(
                 textStyle: TextStyle(
@@ -42,15 +45,16 @@ class MyApp extends StatelessWidget {
                   buttonColor: AppElements.enabledButton.color(),
                   disabledColor: AppElements.disabledButton.color(),
                   textTheme: ButtonTextTheme.primary)),
-          supportedLocales: AllLocales.all.values,
-          locale: Provider.of<LocaleService>(context).currentLocale,
-          localizationsDelegates: [
+          supportedLocales: AppLocales.allLocales.values,
+          locale: Provider.of<LocaleService>(context).currentAppLocale,
+          localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
           initialRoute: '/',
+          //initialRoute: '/main',
           onGenerateRoute: RouteGenerator.generateRoute,
         );
       }),

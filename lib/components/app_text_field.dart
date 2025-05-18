@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../style/app_color_scheme.dart';
 
@@ -7,32 +6,32 @@ class AppTextField extends StatelessWidget {
   final bool enableSuggestions;
   final bool autocorrect;
   final bool obscureText;
-  final EdgeInsets margin;
-  final EdgeInsets padding;
-  final int maxLines;
-  final Color textColor;
-  final Color cursorColor;
+  final EdgeInsets? margin;
+  final EdgeInsets? padding;
+  final int? maxLines;
+  final Color? textColor;
+  final Color? cursorColor;
   final String labelText;
   final double labelSize;
-  final Color labelColor;
-  final String errorText;
+  final Color? labelColor;
+  final String? errorText;
   final double cursorWidth;
   final double borderRadius;
   final double borderWidth;
-  final Color enabledBorderColor;
-  final Color disabledBorderColor;
-  final TextEditingController fieldController;
-  final FocusNode fieldFocusNode;
-  final void Function(String text) onChanged;
-  final void Function() onTap;
+  final Color? enabledBorderColor;
+  final Color? disabledBorderColor;
+  final TextEditingController? fieldController;
+  final FocusNode? fieldFocusNode;
+  final void Function(String text)? onChanged;
+  final void Function()? onTap;
 
   const AppTextField({
-    Key key,
+    Key? key,
     this.readOnly = false,
     this.padding,
     this.maxLines = 1,
     this.cursorColor,
-    this.labelText,
+    required this.labelText,
     this.cursorWidth = 2.0,
     this.fieldController,
     this.fieldFocusNode,
@@ -55,8 +54,8 @@ class AppTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: margin ?? EdgeInsets.all(0),
-        padding: padding ?? EdgeInsets.all(0),
+        margin: margin ?? const EdgeInsets.all(0),
+        padding: padding ?? const EdgeInsets.all(0),
         child: TextField(
           obscureText: obscureText,
           enableSuggestions: enableSuggestions,
@@ -65,8 +64,7 @@ class AppTextField extends StatelessWidget {
           controller: fieldController ?? TextEditingController(),
           focusNode: fieldFocusNode ?? FocusNode(),
           maxLines: maxLines,
-          style: TextStyle(
-              color: textColor ?? AppElements.textFieldEnabled.color()),
+          style: TextStyle(color: textColor ?? AppElements.textFieldEnabled.color()),
           cursorColor: cursorColor,
           cursorWidth: cursorWidth,
           decoration: InputDecoration(
@@ -80,14 +78,14 @@ class AppTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(borderRadius),
               borderSide: BorderSide(
                 width: borderWidth,
-                color: disabledBorderColor,
+                color: disabledBorderColor ?? AppElements.disabledBorderColor.color() ?? Colors.grey,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(borderRadius),
               borderSide: BorderSide(
                 width: borderWidth,
-                color: enabledBorderColor,
+                color: enabledBorderColor ?? AppElements.disabledBorderColor.color() ?? Colors.white,
                 style: BorderStyle.solid,
               ),
             ),

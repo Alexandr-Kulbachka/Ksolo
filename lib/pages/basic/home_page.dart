@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,9 +9,9 @@ import '../../components/circled_button.dart';
 import '../../style/app_color_scheme.dart';
 
 class Home extends StatefulWidget {
-  int currentBottomNavigationIndex;
+  late int currentBottomNavigationIndex;
 
-  Home({Key key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -27,23 +26,22 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppColorService, TasksService>(
-        builder: (context, appColorService, tasksService, child) {
+    return Consumer2<AppColorService, TasksService>(builder: (context, appColorService, tasksService, child) {
       return Scaffold(
         appBar: AppBar(
           leading: Container(),
-          title: Text(AppLocalizations.of(context).main),
+          title: Text(AppLocalizations.of(context)!.main),
           actions: [
             CircledButton(
               size: 45,
-              margin: EdgeInsets.symmetric(horizontal: 4),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
               iconColor: AppElements.basicText.color(),
               icon: Icons.search,
               onPressed: () {},
             ),
             CircledButton(
               size: 45,
-              margin: EdgeInsets.only(left: 4, right: 15),
+              margin: const EdgeInsets.only(left: 4, right: 15),
               iconColor: AppElements.basicText.color(),
               icon: Icons.add,
               onPressed: () {
@@ -72,21 +70,19 @@ class _HomeState extends State<Home> {
                                 Row(children: [
                                   Flexible(
                                     flex: 3,
-                                    child: Container(
-                                      child: Text(
-                                        task.title,
-                                        overflow: TextOverflow.ellipsis,
-                                        softWrap: false,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppElements.basicText.color(),
-                                        ),
+                                    child: Text(
+                                      task.title,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: false,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppElements.basicText.color(),
                                       ),
                                     ),
                                   ),
-                                  Spacer()
+                                  const Spacer()
                                 ]),
                                 Row(children: [
                                   Flexible(
@@ -95,19 +91,16 @@ class _HomeState extends State<Home> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: false,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: AppElements.basicText.color()),
+                                    style: TextStyle(fontSize: 16, color: AppElements.basicText.color()),
                                   ))
                                 ])
                               ],
                             ),
-                            padding: EdgeInsets.all(5),
-                            margin: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.all(5),
                           ),
                           onTap: () {
-                            Navigator.pushNamed(context, 'home/task',
-                                arguments: {'index': i});
+                            Navigator.pushNamed(context, 'home/task', arguments: {'index': i});
                           });
                     },
                     itemCount: tasksService.size,
